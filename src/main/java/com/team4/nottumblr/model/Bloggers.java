@@ -22,10 +22,10 @@ public class Bloggers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long blogger_id;
+    private long bloggerId;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "roleId", nullable = false)
     private Roles role;
 
     @Column(nullable = false, unique = true)
@@ -37,30 +37,30 @@ public class Bloggers {
     @Column(nullable = false)
     private String password;
 
-    private String profile_picture_url;
+    private String profilePictureUrl;
 
     @OneToMany(mappedBy = "blogger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blogs> blogs;
 
     @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
-    public Bloggers(long blogger_id, Roles role, String username, String email, String password, String profile_picture_url, LocalDateTime created_at) {
-        this.blogger_id = blogger_id;
+    public Bloggers(long bloggerId, Roles role, String username, String email, String password, String profilePictureUrl, LocalDateTime createdAt) {
+        this.bloggerId = bloggerId;
         this.role = role;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.profile_picture_url = profile_picture_url;
-        this.created_at = created_at;
+        this.profilePictureUrl = profilePictureUrl;
+        this.createdAt = createdAt;
     }
 
     public Bloggers() {}
 
     //JWT Constructor
-    public Bloggers(long blogger_id, String email, Roles role) {
-        this.blogger_id = blogger_id;
+    public Bloggers(long bloggerId, String email, Roles role) {
+        this.bloggerId = bloggerId;
         this.email = email;
         this.role = role;
     }
@@ -73,8 +73,8 @@ public class Bloggers {
         this.blogs = blogs;
     }
 
-    public long getBlogger_id() {
-        return blogger_id;
+    public long getBloggerId() {
+        return bloggerId;
     }
 
     public Roles getRole() {
@@ -97,16 +97,16 @@ public class Bloggers {
         return password;
     }
 
-    public String getProfile_picture_url() {
-        return profile_picture_url;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setBlogger_id(long blogger_id) {
-        this.blogger_id = blogger_id;
+    public void setBloggerId(long bloggerId) {
+        this.bloggerId = bloggerId;
     }
 
     public void setUsername(String username) {
@@ -121,11 +121,11 @@ public class Bloggers {
         this.password = password;
     }
 
-    public void setProfile_picture_url(String profile_picture_url) {
-        this.profile_picture_url = profile_picture_url;
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

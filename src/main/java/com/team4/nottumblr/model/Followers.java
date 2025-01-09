@@ -7,14 +7,14 @@ public class Followers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int follower_id;
+    private int followerId;
 
     @ManyToOne
-    @JoinColumn(name = "blogger_id", nullable = false) // Foreign key to Bloggers table
+    @JoinColumn(name = "bloggerId") // Foreign key to Bloggers table
     private Bloggers blogger; // Who is following
 
     @ManyToOne
-    @JoinColumn(name = "following_blog_id", nullable = false) // Foreign key to Blogs table
+    @JoinColumn(name = "followingBlogId") // Foreign key to Blogs table
     private Blogs blog; // The blog being followed
 
     // Default Constructor
@@ -25,8 +25,8 @@ public class Followers {
         this.blog = blog;
     }
 
-    public int getFollower_id() {
-        return follower_id;
+    public int getFollowerId() {
+        return followerId;
     }
 
     public Bloggers getBlogger() {

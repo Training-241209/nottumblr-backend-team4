@@ -24,28 +24,28 @@ public class ReblogsService {
     private PostsRepository postsRepository;
 
     // Get all reblogs for a specific post
-    public List<Reblogs> getAllReblogsByPost(int post_id) {
-        return reblogsRepository.findByPost_Post_id(post_id);
+    public List<Reblogs> getAllReblogsByPost(int postId) {
+        return reblogsRepository.findByPost_PostId(postId);
     }
 
-    public Reblogs createReblog(int post_id, String comment, String token) {
+    public Reblogs createReblog(int postId, String comment, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
-        Posts post = postsRepository.findById(post_id)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + post_id));
+        Posts post = postsRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
 
         Reblogs reblog = new Reblogs(post, currentBlogger, comment);
         return reblogsRepository.save(reblog);
     }
 
 
-    public void deleteReblog(int reblog_id, String token) {
+    public void deleteReblog(int reblogId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
-        Reblogs reblog = reblogsRepository.findById(reblog_id)
-                .orElseThrow(() -> new IllegalArgumentException("Reblog not found with ID: " + reblog_id));
+        Reblogs reblog = reblogsRepository.findById(reblogId)
+                .orElseThrow(() -> new IllegalArgumentException("Reblog not found with ID: " + reblogId));
 
-        if (reblog.getBlogger().getBlogger_id() != currentBlogger.getBlogger_id() &&
+        if (reblog.getBlogger().getBloggerId() != currentBlogger.getBloggerId() &&
             !currentBlogger.getRole().getRoleName().equals("ADMIN")) {
             throw new IllegalArgumentException("You are not authorized to delete this reblog.");
         }

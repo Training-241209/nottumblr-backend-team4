@@ -17,36 +17,34 @@ public class Posts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int post_id;
+    @Column(name = "postId")
+    private int postId;
 
-    @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String media_url;
+    private String mediaUrl;
 
-    @Column(nullable = false)
-    private String media_type;
+    private String mediaType;
 
     @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "blog_id", nullable = false)
+    @JoinColumn(name = "blogId")
     private Blogs blog;
 
     public Posts() {}
 
-    public Posts(String content, String media_url, String media_type, Blogs blog) {
+    public Posts(String content, String mediaUrl, String mediaType, Blogs blog) {
         this.content = content;
-        this.media_url = media_url;
-        this.media_type = media_type;
+        this.mediaUrl = mediaUrl;
+        this.mediaType = mediaType;
         this.blog = blog;
     }
 
-    public int getPost_id() {
-        return post_id;
+    public int getPostId() {
+        return postId;
     }
 
     public String getContent() {
@@ -57,24 +55,24 @@ public class Posts {
         this.content = content;
     }
 
-    public String getMedia_url() {
-        return media_url;
+    public String getMediaUrl() {
+        return mediaUrl;
     }
 
-    public void setMedia_url(String media_url) {
-        this.media_url = media_url;
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 
-    public String getMedia_type() {
-        return media_type;
+    public String getMediaType() {
+        return mediaType;
     }
     
-    public void setMedia_type(String media_type) {
-        this.media_type = media_type;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public Blogs getBlog() {

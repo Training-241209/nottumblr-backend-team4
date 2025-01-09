@@ -11,9 +11,9 @@ public class Roles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int role_id;
+    private int roleId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String roleName;
 
     public Roles(String roleName) {
@@ -22,8 +22,8 @@ public class Roles {
 
     public Roles() {}
 
-    public int getRole_id() {
-        return role_id;
+    public int getRoleId() {
+        return roleId;
     }
 
 

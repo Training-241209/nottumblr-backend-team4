@@ -26,54 +26,54 @@ Foster creativity and build communities around shared interests, with a focus on
 ```mermaid
 erDiagram
     Bloggers {
-        int blogger_id PK
+        int bloggerId PK
         string username
         string email
         string password
         string profile_picture_url
         datetime created_at
-        int role_id FK
+        int roleId FK
     }
     Roles {
-        int role_id PK
+        int roleId PK
         string role_name
     }
     Blogs {
-        int blog_id PK
+        int blogId PK
         string title
         string description
-        int blogger_id FK
+        int bloggerId FK
         datetime created_at
     }
     Posts {
-        int post_id PK
+        int postId PK
         string content
         string media_url
         string media_type
         datetime created_at
-        int blog_id FK
+        int blogId FK
     }
     Followers {
-        int follower_id PK
-        int blogger_id FK
-        int following_blog_id FK
+        int followerId PK
+        int bloggerId FK
+        int following_blogId FK
     }
     Likes {
-        int like_id PK
-        int blogger_id FK
-        int post_id FK
+        int likeId PK
+        int bloggerId FK
+        int postId FK
     }
     Comments {
-        int comment_id PK
+        int commentId PK
         string content
         datetime created_at
-        int blogger_id FK
-        int post_id FK
+        int bloggerId FK
+        int postId FK
     }
     Reblogs {
-        int reblog_id PK
-        int post_id FK
-        int blogger_id FK
+        int reblogId PK
+        int postId FK
+        int bloggerId FK
         datetime reblogged_at
         string comment
     }

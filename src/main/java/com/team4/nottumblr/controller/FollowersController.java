@@ -21,21 +21,21 @@ public class FollowersController {
     @Autowired
     private FollowersService followersService;
 
-    @GetMapping("/blogs/{blog_id}/followers")
-    public ResponseEntity<?> getFollowersByBlogId(@CookieValue(name = "jwt") String token, @PathVariable int blog_id) {
-        List<Followers> followers = followersService.getFollowersByBlogId(blog_id, token);
+    @GetMapping("/blogs/{blogId}/followers")
+    public ResponseEntity<?> getFollowersByBlogId(@CookieValue(name = "jwt") String token, @PathVariable int blogId) {
+        List<Followers> followers = followersService.getFollowersByBlogId(blogId, token);
         return ResponseEntity.ok(followers);
     }
 
-    @PostMapping("/blogs/{blog_id}/followers")
-    public ResponseEntity<?> followBlog(@CookieValue(name = "jwt") String token, @PathVariable int blog_id) {
-        followersService.followBlog(blog_id, token);
+    @PostMapping("/blogs/{blogId}/followers")
+    public ResponseEntity<?> followBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId) {
+        followersService.followBlog(blogId, token);
         return ResponseEntity.ok("Blog followed successfully.");
     }
 
-    @DeleteMapping("/blogs/{blog_id}/followers")
-    public ResponseEntity<?> unfollowBlog(@CookieValue(name = "jwt") String token, @PathVariable int blog_id) {
-        followersService.unfollowBlog(blog_id, token);
+    @DeleteMapping("/blogs/{blogId}/followers")
+    public ResponseEntity<?> unfollowBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId) {
+        followersService.unfollowBlog(blogId, token);
         return ResponseEntity.ok("Blog unfollowed successfully.");
     }
 }

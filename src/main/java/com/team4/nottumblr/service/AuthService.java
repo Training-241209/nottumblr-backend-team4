@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.team4.nottumblr.dto.BloggersDTO;
 import com.team4.nottumblr.dto.JwtResponseDTO;
 import com.team4.nottumblr.model.Bloggers;
+import com.team4.nottumblr.model.Roles;
 import com.team4.nottumblr.repository.BloggersRepository;
+import com.team4.nottumblr.repository.RolesRepository;
 
 @Service
 public class AuthService {
@@ -26,6 +28,9 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private RolesRepository rolesRepository;
+
+    @Autowired
     private BloggerMapper bloggerMapper;
 
     public void registerBlogger(Bloggers blogger) {
@@ -39,6 +44,9 @@ public class AuthService {
 
         String hashedPassword = passwordEncoder.encode(blogger.getPassword());
         blogger.setPassword(hashedPassword);
+
+        Roles role = rolesRepository.findByRoleName("User");
+        blogger.setRole(role);
 
         bloggersRepository.save(blogger);
     }
@@ -58,9 +66,9 @@ public class AuthService {
     public BloggersDTO getBlogger(String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
-        long blogger_id = currentBlogger.getBlogger_id();
+        long bloggerId = currentBlogger.getBloggerId();
 
-        Bloggers blogger = bloggersRepository.findById(blogger_id).orElse(null);
+        Bloggers blogger = bloggersRepository.findById(bloggerId).orElse(null);
 
         return bloggerMapper.convertToBloggersDTO(blogger);
     }

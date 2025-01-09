@@ -17,19 +17,19 @@ public class LikesController {
     @Autowired
     private LikesService likesService;
 
-    @GetMapping("/posts/{post_id}/likes")
-    public ResponseEntity<?> getLikes(@CookieValue(name = "jwt") String token, @PathVariable int post_id) {
-        return ResponseEntity.ok(likesService.getAllLikesByPost(post_id));
+    @GetMapping("/posts/{postId}/likes")
+    public ResponseEntity<?> getLikes(@CookieValue(name = "jwt") String token, @PathVariable int postId) {
+        return ResponseEntity.ok(likesService.getAllLikesByPost(postId));
     }
 
-    @PostMapping("/posts/{post_id}/likes")
-    public ResponseEntity<?> createLike(@CookieValue(name = "jwt") String token, @PathVariable int post_id) {
-        return ResponseEntity.ok(likesService.createLike(post_id, token));
+    @PostMapping("/posts/{postId}/likes")
+    public ResponseEntity<?> createLike(@CookieValue(name = "jwt") String token, @PathVariable int postId) {
+        return ResponseEntity.ok(likesService.createLike(postId, token));
     }
 
-    @DeleteMapping("/posts/{post_id}/likes/{like_id}")
-    public ResponseEntity<?> deleteLike(@CookieValue(name = "jwt") String token, @PathVariable int post_id, @PathVariable int like_id) {
-        likesService.deleteLike(like_id, token);
+    @DeleteMapping("/posts/{postId}/likes/{likeId}")
+    public ResponseEntity<?> deleteLike(@CookieValue(name = "jwt") String token, @PathVariable int postId, @PathVariable int likeId) {
+        likesService.deleteLike(likeId, token);
         return ResponseEntity.ok("Like deleted successfully.");
     }    
 }

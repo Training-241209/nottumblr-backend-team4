@@ -18,35 +18,35 @@ public class PostsService {
     @Autowired
     private JwtService jwtService;
 
-    public List<Posts> getAllPosts(String token, Integer blog_id, Long blogger_id) {
+    public List<Posts> getAllPosts(String token, Integer blogId, Long bloggerId) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
-        if(blog_id != null) {
-            return postsRepository.findByBlog_Blog_id(blog_id);
+        if(blogId != null) {
+            return postsRepository.findByBlog_BlogId(blogId);
         }
 
-        if(blogger_id != null) {
-            return postsRepository.findByBlog_Blogger_Blogger_id(blogger_id);
+        if(bloggerId != null) {
+            return postsRepository.findByBlog_Blogger_BloggerId(bloggerId);
         }
 
         return postsRepository.findAll();
     }
 
-    public Posts getPostById(int post_id, String token) {
-        return postsRepository.findById(post_id).orElseThrow(() -> new IllegalArgumentException("Can't Find ID: " + post_id));
+    public Posts getPostById(int postId, String token) {
+        return postsRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Can't Find ID: " + postId));
     }
 
     public Posts createPost(Posts post, String token) {
         return postsRepository.save(post);
     }
 
-    public Posts updatePost(int post_id, Posts updatedPost, String token) {
-        Posts post = postsRepository.findById(post_id).orElseThrow(() -> new IllegalArgumentException("Can't Find ID: " + post_id));
+    public Posts updatePost(int postId, Posts updatedPost, String token) {
+        Posts post = postsRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Can't Find ID: " + postId));
         post.setContent(updatedPost.getContent());
         return postsRepository.save(post);
     }
 
-    public void deletePost(int post_id, String token) {
-        postsRepository.deleteById(post_id);
+    public void deletePost(int postId, String token) {
+        postsRepository.deleteById(postId);
     }
 }

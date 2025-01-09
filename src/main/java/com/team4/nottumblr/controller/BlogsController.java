@@ -36,21 +36,21 @@ public class BlogsController {
         return ResponseEntity.ok(createdBlog);
     }
 
-    @GetMapping("/{blog_id}")
-    public ResponseEntity<?> getBlogById(@CookieValue(name = "jwt") String token, @PathVariable int blog_id) {
-        Blogs blog = blogsService.getBlogById(blog_id, token);
+    @GetMapping("/{blogId}")
+    public ResponseEntity<?> getBlogById(@CookieValue(name = "jwt") String token, @PathVariable int blogId) {
+        Blogs blog = blogsService.getBlogById(blogId, token);
         return ResponseEntity.ok(blog);
     }
 
-    @DeleteMapping("/delete/{blog_id}")
-    public ResponseEntity<?> deleteBlog(@CookieValue(name = "jwt") String token, @PathVariable int blog_id) {
-        blogsService.deleteBlog(blog_id, token);
+    @DeleteMapping("/delete/{blogId}")
+    public ResponseEntity<?> deleteBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId) {
+        blogsService.deleteBlog(blogId, token);
         return ResponseEntity.ok().body("Blog deleted.");
     }
 
-    @PatchMapping("/update/{blog_id}")
-    public ResponseEntity<?> updateBlog(@CookieValue(name = "jwt") String token, @PathVariable int blog_id, @RequestBody Blogs updatedBlog) {
-        Blogs blog = blogsService.updateBlog(blog_id, updatedBlog, token);
+    @PatchMapping("/update/{blogId}")
+    public ResponseEntity<?> updateBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId, @RequestBody Blogs updatedBlog) {
+        Blogs blog = blogsService.updateBlog(blogId, updatedBlog, token);
         return ResponseEntity.ok(blog);
     }
 }

@@ -11,14 +11,14 @@ import jakarta.persistence.ManyToOne;
 public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int like_id;
+    private int likeId;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "postId")
     private Posts post;
 
     @ManyToOne
-    @JoinColumn(name = "blogger_id", nullable = false)
+    @JoinColumn(name = "bloggerId")
     private Bloggers blogger;
 
     public Likes(Posts post, Bloggers blogger) {
@@ -28,8 +28,8 @@ public class Likes {
 
     public Likes() {}
 
-    public int getLike_id() {
-        return like_id;
+    public int getLikeId() {
+        return likeId;
     }
 
 

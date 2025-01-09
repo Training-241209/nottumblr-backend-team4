@@ -17,19 +17,19 @@ public class Reblogs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reblog_id;
+    private int reblogId;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "postId")
     private Posts post;
 
     @ManyToOne
-    @JoinColumn(name = "blogger_id", nullable = false)
+    @JoinColumn(name = "bloggerId")
     private Bloggers blogger;
 
     @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime reblogged_at;
+    private LocalDateTime rebloggedAt;
 
     @Column
     private String comment;
@@ -42,8 +42,8 @@ public class Reblogs {
 
     public Reblogs() {}
 
-    public int getReblog_id() {
-        return reblog_id;
+    public int getReblogId() {
+        return reblogId;
     }
 
 
@@ -63,8 +63,8 @@ public class Reblogs {
         this.blogger = blogger;
     }
 
-    public LocalDateTime getReblogged_at() {
-        return reblogged_at;
+    public LocalDateTime getRebloggedAt() {
+        return rebloggedAt;
     }
 
     public String getComment() {

@@ -26,7 +26,7 @@ public class JwtService {
 
     public String generateToken(Bloggers blogger) {
         return Jwts.builder()
-                .claim("id", blogger.getBlogger_id())
+                .claim("id", blogger.getBloggerId())
                 .claim("email", blogger.getEmail())
                 .claim("role",blogger.getRole().getRoleName())
                 // Add other fields

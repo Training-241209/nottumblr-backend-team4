@@ -21,21 +21,21 @@ public class ReblogsController {
     @Autowired
     private ReblogsService reblogsService;
 
-    @GetMapping("/posts/{post_id}/reblogs")
-    public ResponseEntity<?> getAllReblogsByPost(@PathVariable int post_id) {
-        List<Reblogs> reblogs = reblogsService.getAllReblogsByPost(post_id);
+    @GetMapping("/posts/{postId}/reblogs")
+    public ResponseEntity<?> getAllReblogsByPost(@PathVariable int postId) {
+        List<Reblogs> reblogs = reblogsService.getAllReblogsByPost(postId);
 
         return ResponseEntity.ok(reblogs);
     }
 
-    @PostMapping("/posts/{post_id}/reblogs")
-    public ResponseEntity<?> createReblog(@CookieValue(name = "jwt") String token, @PathVariable int post_id, @RequestBody Reblogs reblog) {
-        return ResponseEntity.ok(reblogsService.createReblog(post_id, reblog.getComment(), token));
+    @PostMapping("/posts/{postId}/reblogs")
+    public ResponseEntity<?> createReblog(@CookieValue(name = "jwt") String token, @PathVariable int postId, @RequestBody Reblogs reblog) {
+        return ResponseEntity.ok(reblogsService.createReblog(postId, reblog.getComment(), token));
     }
 
-    @DeleteMapping("/posts/{post_id}/reblogs/{reblog_id}")
-    public ResponseEntity<?> deleteReblog(@CookieValue(name = "jwt") String token, @PathVariable int post_id, @PathVariable int reblog_id) {
-        reblogsService.deleteReblog(reblog_id, token);
+    @DeleteMapping("/posts/{postId}/reblogs/{reblogId}")
+    public ResponseEntity<?> deleteReblog(@CookieValue(name = "jwt") String token, @PathVariable int postId, @PathVariable int reblogId) {
+        reblogsService.deleteReblog(reblogId, token);
         return ResponseEntity.ok("Reblog deleted successfully.");
     }
 }

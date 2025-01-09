@@ -18,16 +18,16 @@ public class CommentsService {
     @Autowired
     private JwtService jwtService;
 
-    public List<Comments> getAllCommentsByPost(int post_id) {
-        return commentsRepository.findByPost_Post_id(post_id);
+    public List<Comments> getAllCommentsByPost(int postId) {
+        return commentsRepository.findByPost_PostId(postId);
     }
 
     public Comments createComment(Comments comment) {
-        if (comment.getPost() == null || comment.getPost().getPost_id() <= 0) {
+        if (comment.getPost() == null || comment.getPost().getPostId() <= 0) {
             throw new IllegalArgumentException("Comment must be associated with a valid post.");
         }
     
-        if (comment.getBlogger() == null || comment.getBlogger().getBlogger_id() <= 0) {
+        if (comment.getBlogger() == null || comment.getBlogger().getBloggerId() <= 0) {
             throw new IllegalArgumentException("Comment must be associated with a valid blogger.");
         }
 
@@ -38,17 +38,17 @@ public class CommentsService {
         return commentsRepository.save(comment);
     }
 
-    public void deleteComment(int comment_id, int post_id, String token) {
+    public void deleteComment(int commentId, int postId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
-        Comments comment = commentsRepository.findById(comment_id)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + comment_id));
+        Comments comment = commentsRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + commentId));
 
-        if (comment.getPost().getPost_id() != post_id) {
+        if (comment.getPost().getPostId() != postId) {
             throw new IllegalArgumentException("Comment does not belong to the specified post.");
         }
 
-        boolean isOwner = comment.getBlogger().getBlogger_id() == currentBlogger.getBlogger_id();
+        boolean isOwner = comment.getBlogger().getBloggerId() == currentBlogger.getBloggerId();
         boolean isAdmin = currentBlogger.getRole().getRoleName().equals("ADMIN");
 
         if (!isOwner && !isAdmin) {

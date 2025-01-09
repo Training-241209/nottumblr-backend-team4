@@ -20,26 +20,26 @@ public class BloggersService {
     private JwtService jwtService;
 
 
-    public boolean existsBloggerByBloggerId(long blogger_id) {
-        return bloggersRepository.existsById(blogger_id);
+    public boolean existsBloggerByBloggerId(long bloggerId) {
+        return bloggersRepository.existsById(bloggerId);
     }
 
-    public Bloggers getBloggerById(long blogger_id) {
-        if (!bloggersRepository.existsById(blogger_id)) {
-            throw new IllegalArgumentException("Blogger with ID: " + blogger_id + " does not exist.");
+    public Bloggers getBloggerById(long bloggerId) {
+        if (!bloggersRepository.existsById(bloggerId)) {
+            throw new IllegalArgumentException("Blogger with ID: " + bloggerId + " does not exist.");
         }
-        return bloggersRepository.findById(blogger_id).orElse(null);
+        return bloggersRepository.findById(bloggerId).orElse(null);
     }
 
-    public Bloggers updateBlogger(long blogger_id, BloggersDTO bloggersDTO, String token) {
+    public Bloggers updateBlogger(long bloggerId, BloggersDTO bloggersDTO, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
         if (!currentBlogger.getRole().getRoleName().equals("ADMIN")) {
             throw new IllegalArgumentException("Only admins can update bloggers.");
         }
 
-        Bloggers bloggerToUpdate = bloggersRepository.findById(blogger_id)
-                .orElseThrow(() -> new IllegalArgumentException("Blogger with ID: " + blogger_id + " does not exist."));
+        Bloggers bloggerToUpdate = bloggersRepository.findById(bloggerId)
+                .orElseThrow(() -> new IllegalArgumentException("Blogger with ID: " + bloggerId + " does not exist."));
 
         if (bloggersDTO.getUsername() != null && !bloggersDTO.getUsername().isEmpty()) {
             bloggerToUpdate.setUsername(bloggersDTO.getUsername());
@@ -48,9 +48,9 @@ public class BloggersService {
         return bloggersRepository.save(bloggerToUpdate);
     }
 
-    public List<Blogs> getAllBlogsByBlogger(long blogger_id) {
-        Bloggers blogger = bloggersRepository.findById(blogger_id)
-                .orElseThrow(() -> new IllegalArgumentException("Blogger with ID: " + blogger_id + " not found"));
+    public List<Blogs> getAllBlogsByBlogger(long bloggerId) {
+        Bloggers blogger = bloggersRepository.findById(bloggerId)
+                .orElseThrow(() -> new IllegalArgumentException("Blogger with ID: " + bloggerId + " not found"));
         return blogger.getBlogs();
     }
 

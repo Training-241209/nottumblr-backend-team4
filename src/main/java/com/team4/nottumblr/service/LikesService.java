@@ -14,17 +14,17 @@ public class LikesService {
     @Autowired
     private LikesRepository likesRepository;
 
-    public List<Likes> getAllLikesByPost(int post_id) {
-        List<Likes> likes = likesRepository.findByPost_Post_id(post_id);
+    public List<Likes> getAllLikesByPost(int postId) {
+        List<Likes> likes = likesRepository.findByPost_PostId(postId);
         return likes;
     }
 
-    public Likes createLike(int post_id, String token) {
-        Likes like = new Likes(likesRepository.findByPost_Post_id(post_id).get(0).getPost(), likesRepository.findByPost_Post_id(post_id).get(0).getBlogger());
+    public Likes createLike(int postId, String token) {
+        Likes like = new Likes(likesRepository.findByPost_PostId(postId).get(0).getPost(), likesRepository.findByPost_PostId(postId).get(0).getBlogger());
         return likesRepository.save(like);
     }
 
-    public void deleteLike(int post_id, String token) {
-        likesRepository.deleteByPost_Post_id(post_id);
+    public void deleteLike(int postId, String token) {
+        likesRepository.deleteByPost_PostId(postId);
     }
 }

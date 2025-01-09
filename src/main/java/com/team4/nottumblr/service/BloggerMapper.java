@@ -10,8 +10,9 @@ public class BloggerMapper {
     
     public BloggersDTO convertToBloggersDTO(Bloggers blogger) {
         BloggersDTO bloggersDTO = new BloggersDTO();
-        bloggersDTO.setBlogger_id(blogger.getBlogger_id());
+        bloggersDTO.setBloggerId(blogger.getBloggerId());
         bloggersDTO.setUsername(blogger.getUsername());
+        bloggersDTO.setRoleName(blogger.getRole().getRoleName());
         return bloggersDTO;
     }
 }

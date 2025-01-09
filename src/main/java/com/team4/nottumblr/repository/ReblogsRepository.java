@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.team4.nottumblr.model.Reblogs;
 
 public interface ReblogsRepository extends JpaRepository<Reblogs, Integer> {
-    List<Reblogs> findByPost_Post_id(int post_id);
-    Optional<Reblogs> findById(int reblog_id);
+    List<Reblogs> findByPost_PostId(int postId);
+    Optional<Reblogs> findById(int reblogId);
 }

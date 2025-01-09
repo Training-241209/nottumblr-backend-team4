@@ -28,9 +28,9 @@ public class BlogsService {
         return blogsRepository.save(blog);
     }
 
-    public Blogs updateBlog(int blog_id, Blogs updatedBlog, String token) {
-        Blogs existingBlog = blogsRepository.findById(blog_id)
-                .orElseThrow(() -> new IllegalArgumentException("Blog with ID " + blog_id + " not found."));
+    public Blogs updateBlog(int blogId, Blogs updatedBlog, String token) {
+        Blogs existingBlog = blogsRepository.findById(blogId)
+                .orElseThrow(() -> new IllegalArgumentException("Blog with ID " + blogId + " not found."));
 
         if (updatedBlog.getTitle() != null && !updatedBlog.getTitle().isEmpty()) {
             existingBlog.setTitle(updatedBlog.getTitle());
@@ -41,15 +41,15 @@ public class BlogsService {
         return blogsRepository.save(existingBlog);
     }
 
-    public void deleteBlog(int blog_id, String token) {
-        if (!blogsRepository.existsById(blog_id)) {
-            throw new IllegalArgumentException("Blog with ID " + blog_id + " does not exist.");
+    public void deleteBlog(int blogId, String token) {
+        if (!blogsRepository.existsById(blogId)) {
+            throw new IllegalArgumentException("Blog with ID " + blogId + " does not exist.");
         }
-        blogsRepository.deleteById(blog_id);
+        blogsRepository.deleteById(blogId);
     }
 
-    public Blogs getBlogById(int blog_id, String token) {
-        return blogsRepository.findById(blog_id)
-                .orElseThrow(() -> new IllegalArgumentException("Blog with ID " + blog_id + " not found."));
+    public Blogs getBlogById(int blogId, String token) {
+        return blogsRepository.findById(blogId)
+                .orElseThrow(() -> new IllegalArgumentException("Blog with ID " + blogId + " not found."));
     }
 }

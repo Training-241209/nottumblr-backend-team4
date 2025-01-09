@@ -17,38 +17,38 @@ public class Blogs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int blog_id;
+    private int blogId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String title;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "blogger_id", nullable = false) 
+    @JoinColumn(name = "bloggerId") 
     private Bloggers blogger;
 
     @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
-    public Blogs(int blog_id, String title, Bloggers blogger, String description, LocalDateTime created_at) {
-        this.blog_id = blog_id;
+    public Blogs(int blogId, String title, Bloggers blogger, String description, LocalDateTime createdAt) {
+        this.blogId = blogId;
         this.title = title;
         this.blogger = blogger;
         this.description = description;
-        this.created_at = created_at;
+        this.createdAt = createdAt;
     }
 
     public Blogs() {}
 
-    public int getBlog_id() {
-        return blog_id;
+    public int getBlogId() {
+        return blogId;
     }
 
-    public void setBlog_id(int blog_id) {
-        this.blog_id = blog_id;
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
     }
 
     public String getTitle() {
@@ -75,7 +75,7 @@ public class Blogs {
         this.description = description;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

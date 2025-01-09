@@ -30,13 +30,13 @@ public class AdminsController {
     }
 
     @PatchMapping("/bloggers/{id}")
-    public ResponseEntity<?> promoteBlogger(@CookieValue(name = "jwt") String token, @PathVariable long blogger_id) {
-        Bloggers promotedBlogger = adminService.promoteBloggerById(blogger_id, token);
+    public ResponseEntity<?> promoteBlogger(@CookieValue(name = "jwt") String token, @PathVariable long bloggerId) {
+        Bloggers promotedBlogger = adminService.promoteBloggerById(bloggerId, token);
         return ResponseEntity.ok().body(promotedBlogger);
     }
 
     @DeleteMapping("/bloggers/{id}")
-    public ResponseEntity<?> deleteBlogger(@CookieValue(name = "jwt") String token, @PathVariable long blogger_id) {
-        adminService.deleteBloggerById(blogger_id, token);
+    public ResponseEntity<?> deleteBlogger(@CookieValue(name = "jwt") String token, @PathVariable long bloggerId) {
+        adminService.deleteBloggerById(bloggerId, token);
         return ResponseEntity.ok().body("User deleted.");
     }}

@@ -39,15 +39,15 @@ public class AdminsService {
         }
     }
 
-    public Bloggers promoteBloggerById(long blogger_id, String token) {
+    public Bloggers promoteBloggerById(long bloggerId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
         if (currentBlogger.getRole().getRoleName().equals("ADMIN")) {
-            if (!bloggersRepository.existsById(blogger_id)) {
-                throw new IllegalArgumentException("Blogger with ID: " + blogger_id + " does not exist.");
+            if (!bloggersRepository.existsById(bloggerId)) {
+                throw new IllegalArgumentException("Blogger with ID: " + bloggerId + " does not exist.");
             }
 
-            Bloggers bloggerToPromote = bloggersRepository.findById(blogger_id).orElse(null);
+            Bloggers bloggerToPromote = bloggersRepository.findById(bloggerId).orElse(null);
 
             Roles newRole = new Roles("ADMIN");
             bloggerToPromote.setRole(newRole);
@@ -57,8 +57,8 @@ public class AdminsService {
         }
     }
 
-    public void deleteBloggerById(long blogger_id, String token) {
-        Bloggers blogger = bloggersService.getBloggerById(blogger_id);
+    public void deleteBloggerById(long bloggerId, String token) {
+        Bloggers blogger = bloggersService.getBloggerById(bloggerId);
         if (blogger.getUsername().equals(token)) { // users can delete their own
             bloggersRepository.delete(blogger);
         }

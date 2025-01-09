@@ -27,15 +27,15 @@ public class PostsController {
 
     @GetMapping
     public ResponseEntity<?> getAllPosts(@CookieValue(name = "jwt") String token,
-            @RequestParam(required = false) Integer blog_id,
-            @RequestParam(required = false) Long blogger_id) {
-                List<Posts> posts = postsService.getAllPosts(token, blog_id, blogger_id);
+            @RequestParam(required = false) Integer blogId,
+            @RequestParam(required = false) Long bloggerId) {
+                List<Posts> posts = postsService.getAllPosts(token, blogId, bloggerId);
                 return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/{post_id}")
-    public ResponseEntity<?> getPostById(@CookieValue(name = "jwt") String token, @PathVariable int post_id) {
-        Posts post = postsService.getPostById(post_id, token);
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getPostById(@CookieValue(name = "jwt") String token, @PathVariable int postId) {
+        Posts post = postsService.getPostById(postId, token);
         return ResponseEntity.ok(post);
     }
 
@@ -45,15 +45,15 @@ public class PostsController {
         return ResponseEntity.ok(createdPost);
     }
 
-    @PatchMapping("/update/{post_id}")
-    public ResponseEntity<?> updatePost(@CookieValue(name = "jwt") String token, @PathVariable int post_id, @RequestBody Posts updatedPost) {
-        Posts post = postsService.updatePost(post_id, updatedPost, token);
+    @PatchMapping("/update/{postId}")
+    public ResponseEntity<?> updatePost(@CookieValue(name = "jwt") String token, @PathVariable int postId, @RequestBody Posts updatedPost) {
+        Posts post = postsService.updatePost(postId, updatedPost, token);
         return ResponseEntity.ok(post);
     }
 
-    @DeleteMapping("/delete/{post_id}")
-    public ResponseEntity<?> deletePost(@CookieValue(name = "jwt") String token, @PathVariable int post_id) {
-        postsService.deletePost(post_id, token);
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<?> deletePost(@CookieValue(name = "jwt") String token, @PathVariable int postId) {
+        postsService.deletePost(postId, token);
         return ResponseEntity.ok().body("Post deleted.");
     }
 }

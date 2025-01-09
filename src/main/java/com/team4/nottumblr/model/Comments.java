@@ -17,21 +17,20 @@ public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int comment_id;
+    private int commentId;
 
-    @Column(nullable = false)
     private String content;
 
     @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "blogger_id", nullable = false)
+    @JoinColumn(name = "bloggerId")
     private Bloggers blogger;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "postId")
     private Posts post;
 
     public Comments(String content, Bloggers blogger, Posts post) {
@@ -42,8 +41,8 @@ public class Comments {
 
     public Comments() {}
 
-    public int getComment_id() {
-        return comment_id;
+    public int getCommentId() {
+        return commentId;
     }
 
     public String getContent() {
@@ -54,8 +53,8 @@ public class Comments {
         this.content = content;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public Bloggers getBlogger() {

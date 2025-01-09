@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,22 +29,22 @@ public class BloggersController {
     @Autowired
     private BloggerMapper bloggerMapper;
 
-    @GetMapping("/{blogger_id}")
-    public ResponseEntity<?> getBlogger(@CookieValue(name = "jwt") String token, @PathVariable long blogger_id) {
-        Bloggers blogger = bloggersService.getBloggerById(blogger_id);
+    @GetMapping("/{bloggerId}")
+    public ResponseEntity<?> getBlogger(@CookieValue(name = "jwt") String token, @PathVariable long bloggerId) {
+        Bloggers blogger = bloggersService.getBloggerById(bloggerId);
         BloggersDTO bloggerDTO = bloggerMapper.convertToBloggersDTO(blogger);
         return ResponseEntity.ok().body(bloggerDTO);
     }
 
-    @PatchMapping("/{blogger_id}")
-    public ResponseEntity<?> updateBlogger(@PathVariable long blogger_id, @RequestBody BloggersDTO bloggersDTO, @RequestHeader("Authorization") String token) {
-        bloggersService.updateBlogger(blogger_id, bloggersDTO, token);
+    @PatchMapping("/{bloggerId}")
+    public ResponseEntity<?> updateBlogger(@PathVariable long bloggerId, @RequestBody BloggersDTO bloggersDTO, @RequestHeader("Authorization") String token) {
+        bloggersService.updateBlogger(bloggerId, bloggersDTO, token);
         return ResponseEntity.ok("Blogger profile updated successfully.");
     }
 
-    @GetMapping("/{blogger_id}/posts")
-    public ResponseEntity<?> getBloggerPosts(@CookieValue(name = "jwt") String token, @PathVariable long blogger_id) {
-        List<Blogs> blogs = bloggersService.getAllBlogsByBlogger(blogger_id);
+    @GetMapping("/{bloggerId}/posts")
+    public ResponseEntity<?> getBloggerPosts(@CookieValue(name = "jwt") String token, @PathVariable long bloggerId) {
+        List<Blogs> blogs = bloggersService.getAllBlogsByBlogger(bloggerId);
         return ResponseEntity.ok(blogs);
     }
 
