@@ -33,8 +33,7 @@ public class Blogs {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Blogs(int blogId, String title, Bloggers blogger, String description, LocalDateTime createdAt) {
-        this.blogId = blogId;
+    public Blogs(String title, Bloggers blogger, String description, LocalDateTime createdAt) {
         this.title = title;
         this.blogger = blogger;
         this.description = description;
@@ -47,9 +46,6 @@ public class Blogs {
         return blogId;
     }
 
-    public void setBlogId(int blogId) {
-        this.blogId = blogId;
-    }
 
     public String getTitle() {
         return title;
