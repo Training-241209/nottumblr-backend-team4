@@ -1,70 +1,82 @@
 package com.team4.nottumblr.service;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.team4.nottumblr.model.Bloggers;
-import com.team4.nottumblr.model.Blogs;
 import com.team4.nottumblr.model.Followers;
-import com.team4.nottumblr.repository.BlogsRepository;
+import com.team4.nottumblr.repository.BloggersRepository;
 import com.team4.nottumblr.repository.FollowersRepository;
 
 @Service
 public class FollowersService {
+
     @Autowired
     private FollowersRepository followersRepository;
 
     @Autowired
-    private BlogsRepository blogsRepository;
+    private BloggersRepository bloggersRepository;
+
 
     @Autowired
     private JwtService jwtService;
 
-    public List<Followers> getFollowersByBlogId(int blogId, String token) {
-        // Decode the token to validate the blogger
-        Bloggers currentBlogger = jwtService.decodeToken(token);
-
-        // Fetch the blog to ensure it exists and belongs to the current blogger
-        Blogs blog = blogsRepository.findById(blogId)
-                .orElseThrow(() -> new IllegalArgumentException("Blog not found with ID: " + blogId));
-
-        if (blog.getBlogger().getBloggerId() != currentBlogger.getBloggerId() &&
-                !currentBlogger.getRole().getRoleName().equals("ADMIN")) {
-            throw new IllegalArgumentException("You are not authorized to view followers for this blog.");
-        }
-
-        // Fetch followers for the specified blog
-        return followersRepository.findByBlog_BlogId(blogId);
+    public Map<String, List<String>> getAllFollowersForBlogger(long bloggerId) {
+        List<Followers> followers = followersRepository.findByFollowee_BloggerId(bloggerId);
+    
+        // Extract usernames of followers
+        List<String> followerUsernames = followers.stream()
+            .map(follower -> follower.getFollower().getUsername())
+            .toList();
+    
+        // Prepare the response as a map
+        Map<String, List<String>> response = new HashMap<>();
+        response.put("followers", followerUsernames);
+    
+        return response;
     }
 
-    public void followBlog(int blogId, String token) {
+    public Followers followBlogger(long bloggerId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
-
-        Blogs blog = blogsRepository.findById(blogId)
-                .orElseThrow(() -> new IllegalArgumentException("Blog not found with ID: " + blogId));
-
-        if (blog.getBlogger().getBloggerId() == currentBlogger.getBloggerId()) {
-            throw new IllegalArgumentException("You cannot follow your own blog.");
+    
+        if (currentBlogger.getBloggerId() == bloggerId) {
+            throw new IllegalArgumentException("You cannot follow yourself.");
         }
-
-        Followers follower = new Followers(currentBlogger, blog);
-        followersRepository.save(follower);
+    
+        // Fetch the followee (blogger being followed)
+        Bloggers followee = bloggersRepository.findById(bloggerId)
+                .orElseThrow(() -> new IllegalArgumentException("Blogger not found with ID: " + bloggerId));
+    
+        // Check if already following
+        if (followersRepository.existsByFollower_BloggerIdAndFollowee_BloggerId(currentBlogger.getBloggerId(), bloggerId)) {
+            throw new IllegalArgumentException("You are already following this blogger.");
+        }
+    
+        Followers newFollower = new Followers(currentBlogger, followee);
+        return followersRepository.save(newFollower);
     }
+    
+    
 
-    public void unfollowBlog(int blogId, String token) {
+    public void unfollowBlogger(long bloggerId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
-
-        Blogs blog = blogsRepository.findById(blogId)
-                .orElseThrow(() -> new IllegalArgumentException("Blog not found with ID: " + blogId));
-
-        if (blog.getBlogger().getBloggerId() == currentBlogger.getBloggerId()) {
-            throw new IllegalArgumentException("You cannot unfollow your own blog.");
-        }
-
-        Followers follower = followersRepository.findByBlogger_BloggerIdAndBlog_BlogId(currentBlogger.getBloggerId(), blogId);
-
+    
+        Followers follower = followersRepository.findByFollowerAndFollowee(
+                currentBlogger.getBloggerId(), bloggerId)
+                .orElseThrow(() -> new IllegalArgumentException("You are not following this blogger."));
+    
         followersRepository.delete(follower);
     }
+    
+
+    public boolean isFollowing(long followerId, long followeeId) {
+        return followersRepository.existsByFollower_BloggerIdAndFollowee_BloggerId(followerId, followeeId);
+    }
+
 }
+

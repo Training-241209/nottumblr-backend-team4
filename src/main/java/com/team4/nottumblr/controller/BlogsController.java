@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.team4.nottumblr.dto.BlogsDTO;
 import com.team4.nottumblr.model.Blogs;
 import com.team4.nottumblr.service.BlogsService;
 
@@ -26,13 +27,19 @@ public class BlogsController {
 
     @GetMapping
     public ResponseEntity<?> getAllBlogs(@CookieValue(name = "jwt") String token) {
-        List<Blogs> blogs = blogsService.getAllBlogs(token);
+        List<BlogsDTO> blogs = blogsService.getAllBlogs(token);
+        return ResponseEntity.ok(blogs);
+    }
+
+    @GetMapping("/blogger/{bloggerId}")
+    public ResponseEntity<?> getAllBlogsByBlogger(@PathVariable long bloggerId) {
+        List<BlogsDTO> blogs = blogsService.getBlogsByBlogger(bloggerId);
         return ResponseEntity.ok(blogs);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBlog(@RequestBody Blogs blog, @CookieValue(name = "jwt") String token) {
-        Blogs createdBlog = blogsService.createBlog(blog, token);
+    public ResponseEntity<?> createBlog(@RequestBody BlogsDTO blogDTO, @CookieValue(name = "jwt") String token) {
+        BlogsDTO createdBlog = blogsService.createBlog(blogDTO, token);
         return ResponseEntity.ok(createdBlog);
     }
 
@@ -49,8 +56,8 @@ public class BlogsController {
     }
 
     @PatchMapping("/update/{blogId}")
-    public ResponseEntity<?> updateBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId, @RequestBody Blogs updatedBlog) {
-        Blogs blog = blogsService.updateBlog(blogId, updatedBlog, token);
+    public ResponseEntity<?> updateBlog(@CookieValue(name = "jwt") String token, @PathVariable int blogId, @RequestBody BlogsDTO updatedBlog) {
+        BlogsDTO blog = blogsService.updateBlog(blogId, updatedBlog, token);
         return ResponseEntity.ok(blog);
     }
 }

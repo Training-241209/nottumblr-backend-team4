@@ -1,9 +1,12 @@
 package com.team4.nottumblr.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Posts {
@@ -34,6 +38,16 @@ public class Posts {
     @JoinColumn(name = "blogId")
     private Blogs blog;
 
+    @ManyToOne
+    @JoinColumn(name = "bloggerId")
+    private Bloggers blogger;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comments> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likes> likes = new ArrayList<>();
+
     public Posts() {}
 
     public Posts(String content, String mediaUrl, String mediaType, Blogs blog) {
@@ -45,6 +59,14 @@ public class Posts {
 
     public int getPostId() {
         return postId;
+    }
+
+    public Bloggers getBlogger() {
+        return blogger;
+    }
+
+    public void setBlogger(Bloggers blogger) {
+        this.blogger = blogger;
     }
 
     public String getContent() {

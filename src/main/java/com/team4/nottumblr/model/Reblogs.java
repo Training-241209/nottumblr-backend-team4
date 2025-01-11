@@ -20,8 +20,8 @@ public class Reblogs {
     private int reblogId;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
-    private Posts post;
+    @JoinColumn(name = "blogId") 
+    private Blogs blog;
 
     @ManyToOne
     @JoinColumn(name = "bloggerId")
@@ -34,8 +34,8 @@ public class Reblogs {
     @Column
     private String comment;
 
-    public Reblogs(Posts post, Bloggers blogger, String comment) {
-        this.post = post;
+    public Reblogs(Blogs blog, Bloggers blogger, String comment) {
+        this.blog = blog;
         this.blogger = blogger;
         this.comment = comment;
     }
@@ -47,12 +47,12 @@ public class Reblogs {
     }
 
 
-    public Posts getPost() {
-        return post;
+    public Blogs getBlog() {
+        return blog;
     }
 
-    public void setPost(Posts post) {
-        this.post = post;
+    public void setPost(Blogs blog) {
+        this.blog = blog;
     }
 
     public Bloggers getBlogger() {

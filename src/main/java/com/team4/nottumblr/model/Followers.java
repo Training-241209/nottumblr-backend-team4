@@ -10,38 +10,46 @@ public class Followers {
     private int followerId;
 
     @ManyToOne
-    @JoinColumn(name = "bloggerId") // Foreign key to Bloggers table
-    private Bloggers blogger; // Who is following
+    @JoinColumn(name = "follower_blogger_Id") // The blogger who is following
+    private Bloggers follower;
 
     @ManyToOne
-    @JoinColumn(name = "followingBlogId") // Foreign key to Blogs table
-    private Blogs blog; // The blog being followed
+    @JoinColumn(name = "followee_blogger_Id") // The blogger who is being followed
+    private Bloggers followee;
 
     // Default Constructor
     public Followers() {}
 
-    public Followers(Bloggers blogger, Blogs blog) {
-        this.blogger = blogger;
-        this.blog = blog;
+    // Parameterized Constructor
+    public Followers(Bloggers follower, Bloggers followee) {
+        this.follower = follower;
+        this.followee = followee;
     }
 
+    // Getter and Setter for followerId
     public int getFollowerId() {
         return followerId;
     }
 
-    public Bloggers getBlogger() {
-        return blogger;
+    public void setFollowerId(int followerId) {
+        this.followerId = followerId;
     }
 
-    public void setBlogger(Bloggers blogger) {
-        this.blogger = blogger;
+    // Getter and Setter for follower
+    public Bloggers getFollower() {
+        return follower;
     }
 
-    public Blogs getBlog() {
-        return blog;
+    public void setFollower(Bloggers follower) {
+        this.follower = follower;
     }
 
-    public void setBlog(Blogs blog) {
-        this.blog = blog;
+    // Getter and Setter for followee
+    public Bloggers getFollowee() {
+        return followee;
+    }
+
+    public void setFollowee(Bloggers followee) {
+        this.followee = followee;
     }
 }

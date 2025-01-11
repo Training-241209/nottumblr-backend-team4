@@ -10,32 +10,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.team4.nottumblr.dto.ReblogsDTO;
 import com.team4.nottumblr.model.Reblogs;
 import com.team4.nottumblr.service.ReblogsService;
 
 @RestController
+@RequestMapping("/reblogs")
 public class ReblogsController {
 
     @Autowired
     private ReblogsService reblogsService;
 
-    @GetMapping("/posts/{postId}/reblogs")
-    public ResponseEntity<?> getAllReblogsByPost(@PathVariable int postId) {
-        List<Reblogs> reblogs = reblogsService.getAllReblogsByPost(postId);
-
+    @GetMapping("/blogs/{blogId}")
+    public ResponseEntity<?> getAllReblogsByBlogId(@PathVariable int blogId) {
+        List<ReblogsDTO> reblogs = reblogsService.getAllReblogsByBlogId(blogId);
         return ResponseEntity.ok(reblogs);
     }
 
-    @PostMapping("/posts/{postId}/reblogs")
-    public ResponseEntity<?> createReblog(@CookieValue(name = "jwt") String token, @PathVariable int postId, @RequestBody Reblogs reblog) {
-        return ResponseEntity.ok(reblogsService.createReblog(postId, reblog.getComment(), token));
+    @PostMapping("/blogs/{blogId}")
+    public ResponseEntity<?> createReblog(@CookieValue(name = "jwt") String token, 
+                                          @PathVariable int blogId, 
+                                          @RequestBody Reblogs reblogRequest) {
+        ReblogsDTO reblog = reblogsService.createReblog(blogId, reblogRequest.getComment(), token);
+        return ResponseEntity.status(201).body(reblog);
     }
 
-    @DeleteMapping("/posts/{postId}/reblogs/{reblogId}")
-    public ResponseEntity<?> deleteReblog(@CookieValue(name = "jwt") String token, @PathVariable int postId, @PathVariable int reblogId) {
+  
+    @DeleteMapping("/{reblogId}")
+    public ResponseEntity<?> deleteReblog(@CookieValue(name = "jwt") String token, 
+                                          @PathVariable int reblogId) {
+
         reblogsService.deleteReblog(reblogId, token);
         return ResponseEntity.ok("Reblog deleted successfully.");
     }
 }
+

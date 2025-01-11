@@ -1,7 +1,5 @@
 package com.team4.nottumblr.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.team4.nottumblr.dto.BloggersDTO;
 import com.team4.nottumblr.model.Bloggers;
-import com.team4.nottumblr.model.Blogs;
 import com.team4.nottumblr.service.BloggerMapper;
 import com.team4.nottumblr.service.BloggersService;
 
@@ -31,12 +28,6 @@ public class BloggersController {
         Bloggers blogger = bloggersService.getBloggerById(bloggerId);
         BloggersDTO bloggerDTO = bloggerMapper.convertToBloggersDTO(blogger);
         return ResponseEntity.ok().body(bloggerDTO);
-    }
-
-    @GetMapping("/{bloggerId}/posts")
-    public ResponseEntity<?> getBloggerPosts(@CookieValue(name = "jwt") String token, @PathVariable long bloggerId) {
-        List<Blogs> blogs = bloggersService.getAllBlogsByBlogger(bloggerId);
-        return ResponseEntity.ok(blogs);
     }
 
 }

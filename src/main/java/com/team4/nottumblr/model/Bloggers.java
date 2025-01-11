@@ -1,9 +1,12 @@
 package com.team4.nottumblr.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,7 +43,14 @@ public class Bloggers {
     private String profilePictureUrl;
 
     @OneToMany(mappedBy = "blogger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Blogs> blogs;
+
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Followers> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Followers> following = new ArrayList<>();
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -59,10 +69,11 @@ public class Bloggers {
     public Bloggers() {}
 
     //JWT Constructor
-    public Bloggers(long bloggerId, String email, Roles role) {
+    public Bloggers(long bloggerId, String email, Roles role, String username) {
         this.bloggerId = bloggerId;
         this.email = email;
         this.role = role;
+        this.username = username;
     }
 
     public List<Blogs> getBlogs() {

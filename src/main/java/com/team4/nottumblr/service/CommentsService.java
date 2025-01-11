@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.team4.nottumblr.dto.CommentsDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.model.Comments;
+import com.team4.nottumblr.model.Posts;
 import com.team4.nottumblr.repository.CommentsRepository;
+import com.team4.nottumblr.repository.PostsRepository;
 
 @Service
 public class CommentsService {
@@ -16,27 +19,57 @@ public class CommentsService {
     private CommentsRepository commentsRepository;
 
     @Autowired
+    private PostsRepository postsRepository;
+
+    @Autowired
     private JwtService jwtService;
 
-    public List<Comments> getAllCommentsByPost(int postId) {
-        return commentsRepository.findByPost_PostId(postId);
-    }
-
-    public Comments createComment(Comments comment) {
-        if (comment.getPost() == null || comment.getPost().getPostId() <= 0) {
-            throw new IllegalArgumentException("Comment must be associated with a valid post.");
-        }
+    public List<CommentsDTO> getAllCommentsByPost(int postId) {
+        // Validate if the post exists
+        postsRepository.findById(postId)
+            .orElseThrow(() -> new IllegalArgumentException("Post with ID: " + postId + " not found."));
+        
+        // Retrieve the comments and convert them to DTOs
+        List<Comments> comments = commentsRepository.findByPost_PostId(postId);
+        return comments.stream()
+                       .map(comment -> new CommentsDTO(
+                           comment.getCommentId(),
+                           comment.getContent(),
+                           comment.getCreatedAt(),
+                           comment.getBlogger().getUsername(),
+                           postId
+                       ))
+                       .toList();
+    }    
     
-        if (comment.getBlogger() == null || comment.getBlogger().getBloggerId() <= 0) {
-            throw new IllegalArgumentException("Comment must be associated with a valid blogger.");
-        }
+
+    public CommentsDTO createComment(int postId, Comments comment, String token) {
+        Bloggers currentBlogger = jwtService.decodeToken(token);
+
+        Posts post = postsRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with ID: " + postId + " not found."));
 
         if (comment.getContent() == null || comment.getContent().isEmpty()) {
             throw new IllegalArgumentException("Comment content cannot be empty.");
         }
-    
-        return commentsRepository.save(comment);
+
+        comment.setBlogger(currentBlogger);
+        comment.setPost(post);
+
+        Comments savedComment = commentsRepository.save(comment);
+
+
+        return new CommentsDTO(
+                savedComment.getCommentId(),
+                savedComment.getContent(),
+                savedComment.getCreatedAt(),
+                currentBlogger.getUsername(),
+                postId
+        );
     }
+
+
+    
 
     public void deleteComment(int commentId, int postId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
