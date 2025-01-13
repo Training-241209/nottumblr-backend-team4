@@ -65,6 +65,10 @@ public class Blogs {
         return blogId;
     }
 
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
 
     public String getTitle() {
         return title;

@@ -4,7 +4,15 @@ public class BloggersDTO {
 
     private long bloggerId;
     private String username;
+    private String email;
     private String roleName;
+
+    public BloggersDTO(long bloggerId, String username, String email, String roleName) {
+        this.bloggerId = bloggerId;
+        this.username = username;
+        this.email = email;
+        this.roleName = roleName;
+    }
 
     public long getBloggerId() {
         return bloggerId;
@@ -28,6 +36,14 @@ public class BloggersDTO {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
     
 }

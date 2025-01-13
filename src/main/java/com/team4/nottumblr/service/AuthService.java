@@ -14,7 +14,7 @@ import com.team4.nottumblr.repository.RolesRepository;
 
 @Service
 public class AuthService {
-    
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -35,11 +35,11 @@ public class AuthService {
 
     public void registerBlogger(Bloggers blogger) {
         if (bloggersRepository.existsByUsername(blogger.getUsername())) {
-            throw new IllegalArgumentException("Username already exists"); 
+            throw new IllegalArgumentException("Username already exists");
         }
 
         if (bloggersRepository.existsByEmail(blogger.getEmail())) {
-            throw new IllegalArgumentException("Email already exists"); 
+            throw new IllegalArgumentException("Email already exists");
         }
 
         String hashedPassword = passwordEncoder.encode(blogger.getPassword());
@@ -55,11 +55,11 @@ public class AuthService {
         Bloggers blogger = bloggersRepository.findByUsername(username);
 
         if (blogger == null || !passwordEncoder.matches(password, blogger.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password"); 
+            throw new IllegalArgumentException("Invalid username or password");
         }
 
         String token = jwtService.generateToken(blogger);
-        
+
         return new JwtResponseDTO(token);
     }
 
@@ -68,7 +68,8 @@ public class AuthService {
 
         long bloggerId = currentBlogger.getBloggerId();
 
-        Bloggers blogger = bloggersRepository.findById(bloggerId).orElse(null);
+        Bloggers blogger = bloggersRepository.findById(bloggerId)
+                .orElseThrow(() -> new IllegalArgumentException("Blogger not found with ID: " + bloggerId));
 
         return bloggerMapper.convertToBloggersDTO(blogger);
     }

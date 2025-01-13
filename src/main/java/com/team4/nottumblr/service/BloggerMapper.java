@@ -9,10 +9,12 @@ import com.team4.nottumblr.model.Bloggers;
 public class BloggerMapper {
     
     public BloggersDTO convertToBloggersDTO(Bloggers blogger) {
-        BloggersDTO bloggersDTO = new BloggersDTO();
-        bloggersDTO.setBloggerId(blogger.getBloggerId());
-        bloggersDTO.setUsername(blogger.getUsername());
-        bloggersDTO.setRoleName(blogger.getRole().getRoleName());
-        return bloggersDTO;
+        return new BloggersDTO(
+            blogger.getBloggerId(),
+            blogger.getUsername(),
+            blogger.getEmail(),
+            blogger.getRole().getRoleName()
+        );
     }
 }
+
