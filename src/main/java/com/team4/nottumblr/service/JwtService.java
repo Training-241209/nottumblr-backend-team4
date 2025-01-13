@@ -30,6 +30,8 @@ public class JwtService {
                 .claim("email", blogger.getEmail())
                 .claim("role",blogger.getRole().getRoleName())
                 .claim("username", blogger.getUsername())
+                .claim("firstName", blogger.getFirstName())
+                .claim("lastName", blogger.getLastName())
                 // Add other fields
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) // 15 minutes
@@ -53,7 +55,9 @@ public class JwtService {
         Long userId = claims.get("id", Long.class);
         String email = claims.get("email", String.class);
         String username = claims.get("username", String.class);
+        String firstName = claims.get("firstName", String.class);
+        String lastName = claims.get("lastName", String.class);
 
-        return new Bloggers(userId, email, role, username);
+        return new Bloggers(userId, email, role, username, firstName, lastName);
     }
 }

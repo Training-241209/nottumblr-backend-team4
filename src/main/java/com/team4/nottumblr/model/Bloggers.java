@@ -40,6 +40,12 @@ public class Bloggers {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
     private String profilePictureUrl;
 
     @OneToMany(mappedBy = "blogger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -56,7 +62,7 @@ public class Bloggers {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Bloggers(long bloggerId, Roles role, String username, String email, String password, String profilePictureUrl, LocalDateTime createdAt) {
+    public Bloggers(long bloggerId, Roles role, String username, String email, String password, String profilePictureUrl, LocalDateTime createdAt, String firstName, String lastName) {
         this.bloggerId = bloggerId;
         this.role = role;
         this.username = username;
@@ -64,16 +70,36 @@ public class Bloggers {
         this.password = password;
         this.profilePictureUrl = profilePictureUrl;
         this.createdAt = createdAt;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Bloggers() {}
 
     //JWT Constructor
-    public Bloggers(long bloggerId, String email, Roles role, String username) {
+    public Bloggers(long bloggerId, String email, Roles role, String username, String firstName, String lastName) {
         this.bloggerId = bloggerId;
         this.email = email;
         this.role = role;
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public List<Blogs> getBlogs() {

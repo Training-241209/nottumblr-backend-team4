@@ -6,12 +6,32 @@ public class BloggersDTO {
     private String username;
     private String email;
     private String roleName;
+    private String firstName;
+    private String lastName;
 
-    public BloggersDTO(long bloggerId, String username, String email, String roleName) {
+    public BloggersDTO(long bloggerId, String username, String email, String roleName, String firstName, String lastName) {
         this.bloggerId = bloggerId;
         this.username = username;
         this.email = email;
         this.roleName = roleName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public long getBloggerId() {
