@@ -73,4 +73,11 @@ public class AuthService {
 
         return bloggerMapper.convertToBloggersDTO(blogger);
     }
+
+    public Bloggers getBloggerEntity(String token) {
+        Bloggers currentBlogger = jwtService.decodeToken(token);
+    
+        return bloggersRepository.findById(currentBlogger.getBloggerId())
+                .orElseThrow(() -> new IllegalArgumentException("Blogger not found with ID: " + currentBlogger.getBloggerId()));
+    }
 }

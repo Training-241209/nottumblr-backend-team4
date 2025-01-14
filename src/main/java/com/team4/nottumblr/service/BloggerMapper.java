@@ -15,7 +15,9 @@ public class BloggerMapper {
             blogger.getEmail(),
             blogger.getRole().getRoleName(),
             blogger.getFirstName(),
-            blogger.getLastName()
+            blogger.getLastName(),
+            blogger.getProfilePictureUrl()
+            
         );
     }
 }

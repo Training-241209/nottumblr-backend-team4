@@ -8,14 +8,24 @@ public class BloggersDTO {
     private String roleName;
     private String firstName;
     private String lastName;
+    private String profilePictureUrl;
 
-    public BloggersDTO(long bloggerId, String username, String email, String roleName, String firstName, String lastName) {
+    public BloggersDTO(long bloggerId, String username, String email, String roleName, String firstName, String lastName, String profilePictureUrl) {
         this.bloggerId = bloggerId;
         this.username = username;
         this.email = email;
         this.roleName = roleName;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public String getFirstName() {
