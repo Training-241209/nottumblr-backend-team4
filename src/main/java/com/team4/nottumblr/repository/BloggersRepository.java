@@ -21,4 +21,7 @@ public interface BloggersRepository extends JpaRepository<Bloggers, Long> {
     "GROUP BY b.bloggerId " +
     "ORDER BY followerCount DESC")
     List<Object[]> findTopBloggersWithFollowerCount(int limit);
+
+    List<Bloggers> findByUsernameContainingIgnoreCase(String username);
+
 }

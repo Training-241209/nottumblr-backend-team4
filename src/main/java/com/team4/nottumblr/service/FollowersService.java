@@ -4,6 +4,7 @@ package com.team4.nottumblr.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,19 +29,20 @@ public class FollowersService {
     @Autowired
     private JwtService jwtService;
 
-    public Map<String, List<String>> getAllFollowersForBlogger(long bloggerId) {
+    public List<Map<String, String>> getAllFollowersForBlogger(long bloggerId) {
         List<Followers> followers = followersRepository.findByFollowee_BloggerId(bloggerId);
-    
-        // Extract usernames of followers
-        List<String> followerUsernames = followers.stream()
-            .map(follower -> follower.getFollower().getUsername())
-            .toList();
-    
-        // Prepare the response as a map
-        Map<String, List<String>> response = new HashMap<>();
-        response.put("followers", followerUsernames);
-    
-        return response;
+
+        // Transform followers into a list of maps with username and profilePictureUrl
+        return followers.stream()
+            .map(follower -> {
+                Map<String, String> followerInfo = new HashMap<>();
+                followerInfo.put("username", follower.getFollower().getUsername());
+                followerInfo.put("profilePictureUrl", follower.getFollower().getProfilePictureUrl() != null
+                        ? follower.getFollower().getProfilePictureUrl()
+                        : "/default-avatar.png"); // Provide a default if null
+                return followerInfo;
+            })
+            .collect(Collectors.toList());
     }
 
     public Followers followBlogger(long bloggerId, String token) {

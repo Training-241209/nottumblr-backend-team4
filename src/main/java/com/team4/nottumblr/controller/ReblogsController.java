@@ -33,15 +33,15 @@ public class ReblogsController {
 
     @PostMapping("/posts/{postId}")
     public ResponseEntity<?> createReblog(@CookieValue(name = "jwt") String token,
-                                          @PathVariable int postId,
-                                          @RequestBody Reblogs reblogRequest) {
+            @PathVariable int postId,
+            @RequestBody Reblogs reblogRequest) {
         ReblogsDTO reblog = reblogsService.createReblog(postId, reblogRequest.getComment(), token);
         return ResponseEntity.status(201).body(reblog);
     }
 
     @DeleteMapping("/{reblogId}")
     public ResponseEntity<?> deleteReblog(@CookieValue(name = "jwt") String token,
-                                          @PathVariable int reblogId) {
+            @PathVariable int reblogId) {
         reblogsService.deleteReblog(reblogId, token);
         return ResponseEntity.ok("Reblog deleted successfully.");
     }
@@ -49,6 +49,12 @@ public class ReblogsController {
     @GetMapping("/my-reblogs")
     public ResponseEntity<?> getMyReblogs(@CookieValue(name = "jwt") String token) {
         List<ReblogsDTO> reblogs = reblogsService.getAllReblogsByBlogger(token);
+        return ResponseEntity.ok(reblogs);
+    }
+
+    @GetMapping("/user/{bloggerId}")
+    public ResponseEntity<?> getReblogsByBlogger(@PathVariable Long bloggerId) {
+        List<ReblogsDTO> reblogs = reblogsService.getAllReblogsByOtherBlogger(bloggerId);
         return ResponseEntity.ok(reblogs);
     }
 }

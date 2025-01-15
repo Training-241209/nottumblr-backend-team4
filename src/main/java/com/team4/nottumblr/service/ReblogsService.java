@@ -9,8 +9,11 @@ import com.team4.nottumblr.dto.ReblogsDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.model.Posts;
 import com.team4.nottumblr.model.Reblogs;
+import com.team4.nottumblr.repository.BloggersRepository;
 import com.team4.nottumblr.repository.PostsRepository;
 import com.team4.nottumblr.repository.ReblogsRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ReblogsService {
@@ -22,6 +25,9 @@ public class ReblogsService {
 
     @Autowired
     private PostsRepository postsRepository;
+
+    @Autowired
+    private BloggersRepository bloggersRepository;
 
     // Get all reblogs for a specific post
     public List<ReblogsDTO> getAllReblogsByPostId(int postId) {
@@ -95,6 +101,25 @@ public class ReblogsService {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
         return reblogsRepository.findByBlogger(currentBlogger).stream()
+            .map(reblog -> new ReblogsDTO(
+                reblog.getReblogId(),
+                reblog.getComment(),
+                reblog.getRebloggedAt().toString(),
+                reblog.getBlogger().getUsername(),
+                reblog.getBlogger().getProfilePictureUrl(), // Blogger's profile picture
+                reblog.getPost() != null ? reblog.getPost().getContent() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getUsername() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getProfilePictureUrl() : null,
+                reblog.getPost() != null ? reblog.getPost().getMediaUrl() : null
+            ))
+            .toList();
+    }
+
+    public List<ReblogsDTO> getAllReblogsByOtherBlogger(Long bloggerId) {
+        Bloggers otherBlogger = bloggersRepository.findById(bloggerId)
+            .orElseThrow(() -> new EntityNotFoundException("Blogger not found"));
+        
+        return reblogsRepository.findByBlogger(otherBlogger).stream()
             .map(reblog -> new ReblogsDTO(
                 reblog.getReblogId(),
                 reblog.getComment(),

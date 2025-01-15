@@ -1,6 +1,7 @@
 package com.team4.nottumblr.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.team4.nottumblr.dto.BloggersDTO;
+
 import com.team4.nottumblr.dto.BloggersFollowersDTO;
 import com.team4.nottumblr.service.FollowersService;
 
@@ -28,9 +29,10 @@ public class FollowersController {
 
     @GetMapping("/{bloggerId}")
     public ResponseEntity<?> getAllFollowersForBlogger(@PathVariable long bloggerId) {
-        return ResponseEntity.ok(followersService.getAllFollowersForBlogger(bloggerId));
+        List<Map<String, String>> followers = followersService.getAllFollowersForBlogger(bloggerId);
+        return ResponseEntity.ok(followers);
     }
-
+    
     @PostMapping("/follow/{followeeId}")
     public ResponseEntity<?> followBlogger(@PathVariable long followeeId, @CookieValue(name = "jwt") String token) {
         followersService.followBlogger(followeeId, token);

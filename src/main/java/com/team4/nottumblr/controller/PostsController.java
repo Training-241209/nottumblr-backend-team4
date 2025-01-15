@@ -53,5 +53,11 @@ public class PostsController {
         postsService.deletePost(postId, token);
         return ResponseEntity.ok().body("Post deleted");
     }
+
+    @GetMapping("/user/{bloggerId}")
+    public ResponseEntity<?> getPostsByBlogger(@PathVariable Long bloggerId) {
+        List<PostsDTO> posts = postsService.getPostsByBlogger(bloggerId);
+        return ResponseEntity.ok(posts);
+    }
 }
 

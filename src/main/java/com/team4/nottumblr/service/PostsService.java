@@ -37,6 +37,13 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostsDTO> getPostsByBlogger(Long bloggerId) {
+        List<Posts> posts = postsRepository.findByBlogger_BloggerIdOrderByCreatedAtDesc(bloggerId);
+        return posts.stream()
+            .map(this::convertToPostsDTO)
+            .collect(Collectors.toList());
+    }
+
     public PostsDTO getPostById(int postId) {
         Posts post = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with ID: " + postId + " not found."));
