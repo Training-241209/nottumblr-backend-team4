@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team4.nottumblr.dto.PostsDTO;
 import com.team4.nottumblr.service.PostsService;
 
+import org.yaml.snakeyaml.nodes.Tag;
+
 @RestController
 @RequestMapping("/posts")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
@@ -63,6 +65,12 @@ public class PostsController {
     public ResponseEntity<?> getPostsByBlogger(@PathVariable Long bloggerId) {
         List<PostsDTO> posts = postsService.getPostsByBlogger(bloggerId);
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/tags/{tag}")
+    public ResponseEntity<?> getTags(@CookieValue(name = "jwt") String token) {
+        List<PostsDTO> tag = postsService.getPostByTag(token);
+        return ResponseEntity.ok(tag);
     }
 }
 

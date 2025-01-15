@@ -11,4 +11,5 @@ public interface PostsRepository extends JpaRepository<Posts, Integer> {
     List<Posts> findByBlogger(Bloggers blogger);
     List<Posts> findByBlogger_BloggerIdOrderByCreatedAtDesc(Long bloggerId);
     List<Posts> findAllByOrderByCreatedAtDesc();
+    List<Posts> findByTags(String tags);
 }

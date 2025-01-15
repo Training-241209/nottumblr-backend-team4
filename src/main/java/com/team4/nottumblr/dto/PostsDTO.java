@@ -11,11 +11,12 @@ public class PostsDTO {
     private LocalDateTime createdAt;
     private long bloggerId;
     private String profilePictureUrl;
+    private String tags;
 
     // Updated constructor to include profilePictureUrl
     public PostsDTO(int postId, String username, String content, String mediaUrl, 
                    String mediaType, LocalDateTime createdAt, long bloggerId, 
-                   String profilePictureUrl) {
+                   String profilePictureUrl, String tags) {
         this.postId = postId;
         this.username = username;
         this.content = content;
@@ -24,6 +25,8 @@ public class PostsDTO {
         this.createdAt = createdAt;
         this.bloggerId = bloggerId;
         this.profilePictureUrl = profilePictureUrl;
+        this.tags = tags;
+        
     }
 
     // No-args constructor
@@ -31,6 +34,13 @@ public class PostsDTO {
     }
 
     // Existing getters and setters
+
+    public String getTags() {
+        return tags;
+    }
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
     public int getPostId() {
         return postId;
     }

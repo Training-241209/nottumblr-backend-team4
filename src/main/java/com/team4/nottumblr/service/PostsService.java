@@ -23,6 +23,13 @@ public class PostsService {
     @Autowired
     private JwtService jwtService;
 
+    public List<PostsDTO> getPostByTag(String postTag) {
+        List<Posts> posts = postsRepository.findByTags(postTag);
+        return posts.stream()
+            .map(this::convertToPostsDTO)
+            .collect(Collectors.toList());
+    }
+
     public List<PostsDTO> getAllPosts() {
         List<Posts> allPosts = postsRepository.findAllByOrderByCreatedAtDesc();
 
@@ -66,7 +73,8 @@ public class PostsService {
                 post.getMediaType(),
                 post.getCreatedAt(),
                 post.getBlogger().getBloggerId(),
-                post.getBlogger().getProfilePictureUrl());
+                post.getBlogger().getProfilePictureUrl(),
+                post.getTags());
     }
 
     public PostsDTO createPost(PostsDTO postDTO, String token) {
@@ -97,7 +105,8 @@ public class PostsService {
                 savedPost.getMediaType(),
                 savedPost.getCreatedAt(),
                 currentBlogger.getBloggerId(),
-                currentBlogger.getProfilePictureUrl());
+                currentBlogger.getProfilePictureUrl(),
+                savedPost.getTags());
     }
 
     public void deletePost(int postId, String token) {

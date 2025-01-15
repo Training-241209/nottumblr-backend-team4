@@ -46,15 +46,25 @@ public class Posts {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reblogs> reblogs = new ArrayList<>();
 
+    private String tags;
+
     public Posts() {}
 
-    public Posts(String content, String mediaUrl, String mediaType, Bloggers blogger) {
+    public Posts(String content, String mediaUrl, String mediaType, Bloggers blogger, String tags) {
         this.content = content;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.blogger = blogger;
+        this.tags = tags;
     }
 
+    public String getTags() {
+        return tags;
+    }
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+    
     public int getPostId() {
         return postId;
     }
