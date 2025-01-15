@@ -85,6 +85,7 @@ public class Bloggers {
         this.lastName = lastName;
     }
 
+
     public String getFirstName() {
         return firstName;
     }

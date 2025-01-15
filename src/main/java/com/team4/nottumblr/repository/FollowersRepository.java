@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 import com.team4.nottumblr.model.Followers;
 
 public interface FollowersRepository extends JpaRepository<Followers, Integer> {
@@ -21,4 +22,5 @@ public interface FollowersRepository extends JpaRepository<Followers, Integer> {
 
     // Check if a follower-followee relationship exists by blogger IDs
     boolean existsByFollower_BloggerIdAndFollowee_BloggerId(long followerId, long bloggerId);
+
 }

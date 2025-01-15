@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.team4.nottumblr.dto.BloggersDTO;
+import com.team4.nottumblr.dto.BloggersFollowersDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.model.Followers;
 import com.team4.nottumblr.repository.BloggersRepository;
@@ -78,5 +80,18 @@ public class FollowersService {
         return followersRepository.existsByFollower_BloggerIdAndFollowee_BloggerId(followerId, followeeId);
     }
 
+    public List<BloggersFollowersDTO> getTopBloggers(int limit) {
+        List<Object[]> topBloggers = bloggersRepository.findTopBloggersWithFollowerCount(limit);
+    
+        return topBloggers.stream()
+                .map(result -> new BloggersFollowersDTO(
+                    (Long) result[0],             // bloggerId
+                    (String) result[1],           // username
+                    (String) result[2],           // profilePictureUrl
+                    ((Number) result[3]).intValue() // followerCount
+                ))
+                .toList();
+    }
+    
 }
 
