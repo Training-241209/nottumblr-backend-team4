@@ -3,6 +3,7 @@ package com.team4.nottumblr.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,30 +17,62 @@ import com.team4.nottumblr.model.Comments;
 import com.team4.nottumblr.service.CommentsService;
 
 @RestController
-@RequestMapping("/posts/{postId}/comments")
+@RequestMapping
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class CommentsController {
 
     @Autowired
     private CommentsService commentsService;
 
-
-    @GetMapping
-    public ResponseEntity<?> getComments(@PathVariable int postId) {
+    // Get comments for a specific post
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<?> getCommentsByPost(@PathVariable int postId) {
         return ResponseEntity.ok(commentsService.getAllCommentsByPost(postId));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createComment(@CookieValue(name = "jwt") String token, @PathVariable int postId, @RequestBody Comments comment) {
-        // Pass the postId and token along with the comment to the service
-        CommentsDTO createdComment = commentsService.createComment(postId, comment, token);
+    // Create a comment for a post
+    @PostMapping("/posts/{postId}/comments/create")
+    public ResponseEntity<?> createCommentForPost(
+            @CookieValue(name = "jwt") String token,
+            @PathVariable int postId,
+            @RequestBody Comments comment) {
+        CommentsDTO createdComment = commentsService.createCommentForPost(postId, comment, token);
         return ResponseEntity.ok(createdComment);
     }
 
+    // Delete a comment for a post
+    @DeleteMapping("/posts/{postId}/comments/delete/{commentId}")
+    public ResponseEntity<?> deleteCommentForPost(
+            @CookieValue(name = "jwt") String token,
+            @PathVariable int postId,
+            @PathVariable int commentId) {
+        commentsService.deleteCommentByPost(commentId, postId, token);
+        return ResponseEntity.ok("Comment deleted successfully.");
+    }
 
-    @DeleteMapping("/delete/{commentId}")
-    public ResponseEntity<?> deleteComment(@CookieValue(name = "jwt") String token, @PathVariable int postId, @PathVariable int commentId) {
-        commentsService.deleteComment(commentId, postId, token);
+    // Get comments for a specific reblog
+    @GetMapping("/reblogs/{reblogId}/comments")
+    public ResponseEntity<?> getCommentsByReblog(@PathVariable int reblogId) {
+        return ResponseEntity.ok(commentsService.getAllCommentsByReblog(reblogId));
+    }
+
+    // Create a comment for a reblog
+    @PostMapping("/reblogs/{reblogId}/comments/create")
+    public ResponseEntity<?> createCommentForReblog(
+            @CookieValue(name = "jwt") String token,
+            @PathVariable int reblogId,
+            @RequestBody Comments comment) {
+        CommentsDTO createdComment = commentsService.createCommentForReblog(reblogId, comment, token);
+        return ResponseEntity.ok(createdComment);
+    }
+
+    // Delete a comment for a reblog
+    @DeleteMapping("/reblogs/{reblogId}/comments/delete/{commentId}")
+    public ResponseEntity<?> deleteCommentForReblog(
+            @CookieValue(name = "jwt") String token,
+            @PathVariable int reblogId,
+            @PathVariable int commentId) {
+        commentsService.deleteCommentByReblog(commentId, reblogId, token);
         return ResponseEntity.ok("Comment deleted successfully.");
     }
 }
-

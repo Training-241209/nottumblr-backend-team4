@@ -14,8 +14,12 @@ public class Likes {
     private int likeId;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postId", nullable = true)
     private Posts post;
+
+    @ManyToOne
+    @JoinColumn(name = "reblogId", nullable = true)
+    private Reblogs reblog;
 
     @ManyToOne
     @JoinColumn(name = "bloggerId")
@@ -26,12 +30,16 @@ public class Likes {
         this.blogger = blogger;
     }
 
+    public Likes(Reblogs reblog, Bloggers blogger) {
+        this.reblog = reblog;
+        this.blogger = blogger;
+    }
+
     public Likes() {}
 
     public int getLikeId() {
         return likeId;
     }
-
 
     public Posts getPost() {
         return post;
@@ -39,6 +47,14 @@ public class Likes {
 
     public void setPost(Posts post) {
         this.post = post;
+    }
+
+    public Reblogs getReblog() {
+        return reblog;
+    }
+
+    public void setReblog(Reblogs reblog) {
+        this.reblog = reblog;
     }
 
     public Bloggers getBlogger() {

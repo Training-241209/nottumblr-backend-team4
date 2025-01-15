@@ -19,4 +19,7 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     // Delete likes
     void deleteByPost_PostIdAndBlogger_BloggerId(int postId, long bloggerId);
     void deleteByPost_PostId(int postId);
+
+    boolean existsByReblog_ReblogIdAndBlogger_BloggerId(int reblogId, long bloggerId);
+    List<Likes> findByReblog_ReblogId(int reblogId);
 }

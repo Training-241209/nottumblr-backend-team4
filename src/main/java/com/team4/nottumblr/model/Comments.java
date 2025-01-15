@@ -30,13 +30,18 @@ public class Comments {
     private Bloggers blogger;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postId", nullable = true)
     private Posts post;
 
-    public Comments(String content, Bloggers blogger, Posts post) {
+    @ManyToOne
+    @JoinColumn(name = "reblogId", nullable = true)
+    private Reblogs reblog;
+
+    public Comments(String content, Bloggers blogger, Posts post, Reblogs reblog) {
         this.content = content;
         this.blogger = blogger;
         this.post = post;
+        this.reblog = reblog;
     }
 
     public Comments() {}
@@ -71,5 +76,13 @@ public class Comments {
 
     public void setPost(Posts post) {
         this.post = post;
+    }
+
+    public Reblogs getReblog() {
+        return reblog;
+    }
+
+    public void setReblog(Reblogs reblog) {
+        this.reblog = reblog;
     }
 }
