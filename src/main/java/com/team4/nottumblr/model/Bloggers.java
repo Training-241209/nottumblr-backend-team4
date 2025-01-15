@@ -19,7 +19,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-
 @Entity
 public class Bloggers {
 
@@ -50,7 +49,7 @@ public class Bloggers {
 
     @OneToMany(mappedBy = "blogger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
-    private List<Blogs> blogs;
+    private List<Posts> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Followers> followers = new ArrayList<>();
@@ -102,12 +101,12 @@ public class Bloggers {
         this.lastName = lastName;
     }
 
-    public List<Blogs> getBlogs() {
-        return blogs;
+    public List<Posts> getPosts() {
+        return posts;
     }
 
-    public void setBlogs(List<Blogs> blogs) {
-        this.blogs = blogs;
+    public void setPosts(List<Posts> posts) {
+        this.posts = posts;
     }
 
     public long getBloggerId() {

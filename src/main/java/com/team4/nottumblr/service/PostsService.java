@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.team4.nottumblr.dto.PostsDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.model.Posts;
-import com.team4.nottumblr.repository.BlogsRepository;
 import com.team4.nottumblr.repository.PostsRepository;
 
 @Service
@@ -17,9 +16,6 @@ public class PostsService {
 
     @Autowired
     private PostsRepository postsRepository;
-
-    @Autowired
-    private BlogsRepository blogsRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -37,13 +33,6 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostsDTO> getAllPostsFromBlog(int blogId) {
-        blogsRepository.findById(blogId)
-                .orElseThrow(() -> new IllegalArgumentException("Blog with ID: " + blogId + " not found."));
-
-        List<Posts> posts = postsRepository.findByBlog_BlogId(blogId);
-        return posts.stream().map(this::convertToPostsDTO).toList();
-    }
 
     public PostsDTO getPostById(int postId) {
         Posts post = postsRepository.findById(postId)

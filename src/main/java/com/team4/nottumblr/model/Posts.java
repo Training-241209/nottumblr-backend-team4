@@ -18,7 +18,6 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Posts {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "postId")
@@ -35,10 +34,6 @@ public class Posts {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "blogId")
-    private Blogs blog;
-
-    @ManyToOne
     @JoinColumn(name = "bloggerId")
     private Bloggers blogger;
 
@@ -48,13 +43,16 @@ public class Posts {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reblogs> reblogs = new ArrayList<>();
+
     public Posts() {}
 
-    public Posts(String content, String mediaUrl, String mediaType, Blogs blog) {
+    public Posts(String content, String mediaUrl, String mediaType, Bloggers blogger) {
         this.content = content;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
-        this.blog = blog;
+        this.blogger = blogger;
     }
 
     public int getPostId() {
@@ -97,11 +95,11 @@ public class Posts {
         return createdAt;
     }
 
-    public Blogs getBlog() {
-        return blog;
+    public List<Reblogs> getReblogs() {
+        return reblogs;
     }
 
-    public void setBlog(Blogs blog) {
-        this.blog = blog;
+    public void setReblogs(List<Reblogs> reblogs) {
+        this.reblogs = reblogs;
     }
 }

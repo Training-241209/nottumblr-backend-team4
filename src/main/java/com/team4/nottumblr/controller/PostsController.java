@@ -26,11 +26,6 @@ public class PostsController {
     @Autowired
     private PostsService postsService;
 
-    @GetMapping("/blog/{blogId}")
-    public ResponseEntity<?> getAllPostsFromBlog(@PathVariable int blogId) {
-        List<PostsDTO> posts = postsService.getAllPostsFromBlog(blogId);
-        return ResponseEntity.ok(posts);
-    }
 
      @GetMapping("/my-posts")
     public ResponseEntity<List<PostsDTO>> getMyPosts(@CookieValue(name = "jwt") String token) {

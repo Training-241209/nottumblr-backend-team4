@@ -5,14 +5,18 @@ public class ReblogsDTO {
     private String comment;
     private String rebloggedAt;
     private String bloggerUsername;
-    private String blogTitle;
+    private String originalPostContent;
+    private String originalPostUsername;
 
-    public ReblogsDTO(int reblogId, String comment, String rebloggedAt, String bloggerUsername, String blogTitle) {
+    public ReblogsDTO(int reblogId, String comment, String rebloggedAt, 
+                      String bloggerUsername, String originalPostContent, 
+                      String originalPostUsername) {
         this.reblogId = reblogId;
         this.comment = comment;
         this.rebloggedAt = rebloggedAt;
         this.bloggerUsername = bloggerUsername;
-        this.blogTitle = blogTitle;
+        this.originalPostContent = originalPostContent;
+        this.originalPostUsername = originalPostUsername;
     }
 
     public int getReblogId() {
@@ -47,11 +51,19 @@ public class ReblogsDTO {
         this.bloggerUsername = bloggerUsername;
     }
 
-    public String getBlogTitle() {
-        return blogTitle;
+    public String getOriginalPostContent() {
+        return originalPostContent;
     }
 
-    public void setBlogTitle(String blogTitle) {
-        this.blogTitle = blogTitle;
+    public void setOriginalPostContent(String originalPostContent) {
+        this.originalPostContent = originalPostContent;
+    }
+
+    public String getOriginalPostUsername() {
+        return originalPostUsername;
+    }
+
+    public void setOriginalPostUsername(String originalPostUsername) {
+        this.originalPostUsername = originalPostUsername;
     }
 }

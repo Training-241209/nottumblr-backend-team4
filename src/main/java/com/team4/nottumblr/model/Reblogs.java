@@ -1,7 +1,6 @@
 package com.team4.nottumblr.model;
 
 import java.time.LocalDateTime;
-
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -14,14 +13,13 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Reblogs {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reblogId;
 
     @ManyToOne
-    @JoinColumn(name = "blogId") 
-    private Blogs blog;
+    @JoinColumn(name = "postId")
+    private Posts post;
 
     @ManyToOne
     @JoinColumn(name = "bloggerId")
@@ -34,8 +32,8 @@ public class Reblogs {
     @Column
     private String comment;
 
-    public Reblogs(Blogs blog, Bloggers blogger, String comment) {
-        this.blog = blog;
+    public Reblogs(Posts post, Bloggers blogger, String comment) {
+        this.post = post;
         this.blogger = blogger;
         this.comment = comment;
     }
@@ -46,13 +44,12 @@ public class Reblogs {
         return reblogId;
     }
 
-
-    public Blogs getBlog() {
-        return blog;
+    public Posts getPost() {
+        return post;
     }
 
-    public void setPost(Blogs blog) {
-        this.blog = blog;
+    public void setPost(Posts post) {
+        this.post = post;
     }
 
     public Bloggers getBlogger() {
@@ -74,5 +71,4 @@ public class Reblogs {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
 }
