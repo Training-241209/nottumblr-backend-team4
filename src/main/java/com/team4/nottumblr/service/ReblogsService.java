@@ -26,7 +26,7 @@ public class ReblogsService {
     // Get all reblogs for a specific post
     public List<ReblogsDTO> getAllReblogsByPostId(int postId) {
         // Validate if the post exists
-        postsRepository.findById(postId)
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with ID " + postId + " not found."));
 
         // Fetch all reblogs for the given post and map to DTOs
@@ -36,20 +36,25 @@ public class ReblogsService {
                         reblog.getComment(),
                         reblog.getRebloggedAt().toString(),
                         reblog.getBlogger().getUsername(),
-                        reblog.getPost().getContent(), // Original post content
-                        reblog.getPost().getBlogger().getUsername() // Original post username
+                        reblog.getBlogger().getProfilePictureUrl(), // Blogger's profile picture
+                        post.getContent(), // Original post content
+                        post.getBlogger().getUsername(), // Original post username
+                        post.getBlogger().getProfilePictureUrl(), // Original post profile picture
+                        post.getMediaUrl() // Original post media URL
                 ))
                 .toList();
     }
 
+    // Create a new reblog
     public ReblogsDTO createReblog(int postId, String comment, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
+        // Validate if the post exists
         Posts post = postsRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
 
+        // Create and save the reblog
         Reblogs reblog = new Reblogs(post, currentBlogger, comment);
-
         Reblogs savedReblog = reblogsRepository.save(reblog);
 
         // Map to DTO
@@ -58,14 +63,19 @@ public class ReblogsService {
             savedReblog.getComment(),
             savedReblog.getRebloggedAt().toString(),
             savedReblog.getBlogger().getUsername(),
-            savedReblog.getPost().getContent(), // Original post content
-            savedReblog.getPost().getBlogger().getUsername() // Original post username
+            savedReblog.getBlogger().getProfilePictureUrl(), // Blogger's profile picture
+            post.getContent(), // Original post content
+            post.getBlogger().getUsername(), // Original post username
+            post.getBlogger().getProfilePictureUrl(), // Original post profile picture
+            post.getMediaUrl() // Original post media URL
         );
     }
 
+    // Delete a reblog
     public void deleteReblog(int reblogId, String token) {
         Bloggers currentBlogger = jwtService.decodeToken(token);
 
+        // Validate if the reblog exists
         Reblogs reblog = reblogsRepository.findById(reblogId)
                 .orElseThrow(() -> new IllegalArgumentException("Reblog not found with ID: " + reblogId));
 
@@ -78,5 +88,24 @@ public class ReblogsService {
         }
 
         reblogsRepository.delete(reblog);
+    }
+
+    // Get all reblogs by the currently authenticated blogger
+    public List<ReblogsDTO> getAllReblogsByBlogger(String token) {
+        Bloggers currentBlogger = jwtService.decodeToken(token);
+
+        return reblogsRepository.findByBlogger(currentBlogger).stream()
+            .map(reblog -> new ReblogsDTO(
+                reblog.getReblogId(),
+                reblog.getComment(),
+                reblog.getRebloggedAt().toString(),
+                reblog.getBlogger().getUsername(),
+                reblog.getBlogger().getProfilePictureUrl(), // Blogger's profile picture
+                reblog.getPost() != null ? reblog.getPost().getContent() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getUsername() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getProfilePictureUrl() : null,
+                reblog.getPost() != null ? reblog.getPost().getMediaUrl() : null
+            ))
+            .toList();
     }
 }

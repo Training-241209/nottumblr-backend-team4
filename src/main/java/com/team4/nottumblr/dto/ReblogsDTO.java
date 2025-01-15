@@ -5,18 +5,31 @@ public class ReblogsDTO {
     private String comment;
     private String rebloggedAt;
     private String bloggerUsername;
+    private String bloggerProfilePictureUrl; 
     private String originalPostContent;
     private String originalPostUsername;
+    private String originalPostProfilePictureUrl; 
+    private String originalPostMediaUrl; 
 
-    public ReblogsDTO(int reblogId, String comment, String rebloggedAt, 
-                      String bloggerUsername, String originalPostContent, 
-                      String originalPostUsername) {
+    public ReblogsDTO(
+            int reblogId, 
+            String comment, 
+            String rebloggedAt, 
+            String bloggerUsername, 
+            String bloggerProfilePictureUrl, 
+            String originalPostContent, 
+            String originalPostUsername, 
+            String originalPostProfilePictureUrl,
+            String originalPostMediaUrl) {
         this.reblogId = reblogId;
         this.comment = comment;
         this.rebloggedAt = rebloggedAt;
         this.bloggerUsername = bloggerUsername;
+        this.bloggerProfilePictureUrl = bloggerProfilePictureUrl;
         this.originalPostContent = originalPostContent;
         this.originalPostUsername = originalPostUsername;
+        this.originalPostProfilePictureUrl = originalPostProfilePictureUrl;
+        this.originalPostMediaUrl = originalPostMediaUrl;
     }
 
     public int getReblogId() {
@@ -51,6 +64,14 @@ public class ReblogsDTO {
         this.bloggerUsername = bloggerUsername;
     }
 
+    public String getBloggerProfilePictureUrl() {
+        return bloggerProfilePictureUrl;
+    }
+
+    public void setBloggerProfilePictureUrl(String bloggerProfilePictureUrl) {
+        this.bloggerProfilePictureUrl = bloggerProfilePictureUrl;
+    }
+
     public String getOriginalPostContent() {
         return originalPostContent;
     }
@@ -65,5 +86,21 @@ public class ReblogsDTO {
 
     public void setOriginalPostUsername(String originalPostUsername) {
         this.originalPostUsername = originalPostUsername;
+    }
+
+    public String getOriginalPostProfilePictureUrl() {
+        return originalPostProfilePictureUrl;
+    }
+
+    public void setOriginalPostProfilePictureUrl(String originalPostProfilePictureUrl) {
+        this.originalPostProfilePictureUrl = originalPostProfilePictureUrl;
+    }
+
+    public String getOriginalPostMediaUrl() {
+        return originalPostMediaUrl;
+    }
+
+    public void setOriginalPostMediaUrl(String originalPostMediaUrl) {
+        this.originalPostMediaUrl = originalPostMediaUrl;
     }
 }

@@ -45,4 +45,10 @@ public class ReblogsController {
         reblogsService.deleteReblog(reblogId, token);
         return ResponseEntity.ok("Reblog deleted successfully.");
     }
+
+    @GetMapping("/my-reblogs")
+    public ResponseEntity<?> getMyReblogs(@CookieValue(name = "jwt") String token) {
+        List<ReblogsDTO> reblogs = reblogsService.getAllReblogsByBlogger(token);
+        return ResponseEntity.ok(reblogs);
+    }
 }

@@ -27,10 +27,10 @@ public class PostsController {
     private PostsService postsService;
 
 
-     @GetMapping("/my-posts")
-    public ResponseEntity<List<PostsDTO>> getMyPosts(@CookieValue(name = "jwt") String token) {
-        List<PostsDTO> myPosts = postsService.getAllMyPosts(token);
-        return ResponseEntity.ok(myPosts);
+    @GetMapping("/my-posts")
+    public ResponseEntity<?> getMyPosts(@CookieValue(name = "jwt") String token) {
+        List<PostsDTO> postsAndReblogs = postsService.getAllMyPosts(token);
+        return ResponseEntity.ok(postsAndReblogs);
     }
 
     @GetMapping("/{postId}")
