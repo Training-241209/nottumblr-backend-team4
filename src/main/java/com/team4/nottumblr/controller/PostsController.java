@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.team4.nottumblr.service.PostsService;
 
 @RestController
 @RequestMapping("/posts")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class PostsController {
 
     @Autowired
@@ -30,15 +32,23 @@ public class PostsController {
         return ResponseEntity.ok(posts);
     }
 
+     @GetMapping("/my-posts")
+    public ResponseEntity<List<PostsDTO>> getMyPosts(@CookieValue(name = "jwt") String token) {
+        List<PostsDTO> myPosts = postsService.getAllMyPosts(token);
+        return ResponseEntity.ok(myPosts);
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPostById(@PathVariable int postId) {
         PostsDTO post = postsService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
 
-    @PostMapping("/{blogId}")
-    public ResponseEntity<?> createPost(@CookieValue(name = "jwt") String token, @PathVariable int blogId, @RequestBody PostsDTO post) {
-        post.setBlogId(blogId); 
+    @PostMapping("/create")
+    public ResponseEntity<?> createPost(
+        @CookieValue(name = "jwt") String token, 
+        @RequestBody PostsDTO post
+    ) {
         PostsDTO createdPost = postsService.createPost(post, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
