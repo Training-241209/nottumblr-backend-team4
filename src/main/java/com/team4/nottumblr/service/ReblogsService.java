@@ -29,6 +29,22 @@ public class ReblogsService {
     @Autowired
     private BloggersRepository bloggersRepository;
 
+    public List<ReblogsDTO> getAllReblogs() {
+        return reblogsRepository.findAllByOrderByRebloggedAtDesc().stream()
+            .map(reblog -> new ReblogsDTO(
+                reblog.getReblogId(),
+                reblog.getComment(),
+                reblog.getRebloggedAt().toString(),
+                reblog.getBlogger().getUsername(),
+                reblog.getBlogger().getProfilePictureUrl(), // Blogger's profile picture
+                reblog.getPost() != null ? reblog.getPost().getContent() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getUsername() : null,
+                reblog.getPost() != null ? reblog.getPost().getBlogger().getProfilePictureUrl() : null,
+                reblog.getPost() != null ? reblog.getPost().getMediaUrl() : null
+            ))
+            .toList();
+    }
+
     // Get all reblogs for a specific post
     public List<ReblogsDTO> getAllReblogsByPostId(int postId) {
         // Validate if the post exists

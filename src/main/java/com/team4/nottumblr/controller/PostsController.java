@@ -26,6 +26,11 @@ public class PostsController {
     @Autowired
     private PostsService postsService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<PostsDTO>> getAllPosts() {
+        List<PostsDTO> allPosts = postsService.getAllPosts();
+        return ResponseEntity.ok(allPosts);
+    }
 
     @GetMapping("/my-posts")
     public ResponseEntity<?> getMyPosts(@CookieValue(name = "jwt") String token) {

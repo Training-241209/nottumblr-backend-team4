@@ -25,6 +25,12 @@ public class ReblogsController {
     @Autowired
     private ReblogsService reblogsService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ReblogsDTO>> getAllReblogs() {
+        List<ReblogsDTO> allReblogs = reblogsService.getAllReblogs();
+        return ResponseEntity.ok(allReblogs);
+    }
+
     @GetMapping("/posts/{postId}")
     public ResponseEntity<?> getAllReblogsByPostId(@PathVariable int postId) {
         List<ReblogsDTO> reblogs = reblogsService.getAllReblogsByPostId(postId);

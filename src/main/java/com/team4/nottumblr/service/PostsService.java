@@ -23,6 +23,13 @@ public class PostsService {
     @Autowired
     private JwtService jwtService;
 
+    public List<PostsDTO> getAllPosts() {
+        List<Posts> allPosts = postsRepository.findAllByOrderByCreatedAtDesc();
+
+        return allPosts.stream()
+                .map(this::convertToPostsDTO)
+                .collect(Collectors.toList());
+    }
 
     public List<PostsDTO> getAllMyPosts(String token) {
         // Decode the current blogger from the token

@@ -10,4 +10,5 @@ import com.team4.nottumblr.model.Posts;
 public interface PostsRepository extends JpaRepository<Posts, Integer> {
     List<Posts> findByBlogger(Bloggers blogger);
     List<Posts> findByBlogger_BloggerIdOrderByCreatedAtDesc(Long bloggerId);
+    List<Posts> findAllByOrderByCreatedAtDesc();
 }

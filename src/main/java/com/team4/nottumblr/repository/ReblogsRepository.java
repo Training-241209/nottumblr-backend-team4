@@ -12,4 +12,5 @@ public interface ReblogsRepository extends JpaRepository<Reblogs, Integer> {
     List<Reblogs> findByPost_PostId(int postId);
     Optional<Reblogs> findById(int reblogId);
     List<Reblogs> findByBlogger(Bloggers blogger);
+    List<Reblogs> findAllByOrderByRebloggedAtDesc();
 }
