@@ -6,11 +6,18 @@ pipeline {
         DOCKER_TAG = "${BUILD_NUMBER}"
         DB_CREDS = credentials('DB_CREDS')
         JWT_SECRET = credentials('JWT_SECRET0')
-        echo "DB_URL0: ${env.DB_URL0}"
         DB_URL = credentials('DB_URL0')
     }
 
     stages {
+        stage('Debug Environment Variables') {
+            steps {
+                echo "DB_URL: ${env.DB_URL0}"
+                echo "DB_CREDS_USR: ${env.DB_CREDS_USR}"
+                echo "JWT_SECRET: ${env.JWT_SECRET}"
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn clean package'
