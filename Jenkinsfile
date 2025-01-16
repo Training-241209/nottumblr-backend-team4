@@ -14,7 +14,8 @@ pipeline {
             steps {
                 echo "DB_URL: ${env.DB_URL0}"
                 echo "DB_CREDS_USR: ${env.DB_CREDS_USR}"
-                echo "JWT_SECRET: ${env.JWT_SECRET}"
+                echo "DB_CREDS_PSW: ${env.DB_CREDS_PSW}"
+                echo "JWT_SECRET: ${env.JWT_SECRET0}"
             }
         }
 
