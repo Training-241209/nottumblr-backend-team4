@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.team4.nottumblr.dto.PostsDTO;
 import com.team4.nottumblr.service.PostsService;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.yaml.snakeyaml.nodes.Tag;
 
 @RestController
@@ -38,7 +41,7 @@ public class PostsController {
     @GetMapping("/my-posts")
     public ResponseEntity<?> getMyPosts(
         @CookieValue(name = "jwt", required = false) String token,
-        @RequestHeader(value = "Authorization", required = false) String authHeader
+        @RequestHeader(value = "Authorization", required = false) String authHeader, HttpServletResponse response
     ) {
         // Fallback to Authorization header if token is not in cookies
         if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -48,6 +51,8 @@ public class PostsController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
         }
+
+        response.addHeader("Authorization", "Bearer " + token);
 
         List<PostsDTO> postsAndReblogs = postsService.getAllMyPosts(token);
         return ResponseEntity.ok(postsAndReblogs);
