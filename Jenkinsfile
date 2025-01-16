@@ -6,7 +6,7 @@ pipeline {
         DOCKER_TAG = "${BUILD_NUMBER}"
         DB_CREDS = credentials('DB_CREDENTIALS')
         JWT_SECRET = credentials('JWT_SECRET')
-        DB_URL = credentials('DB_URL1')
+        DB_URL = credentials('DB_URL2')
     }
 
     stages {
