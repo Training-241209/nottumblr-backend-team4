@@ -15,6 +15,7 @@ import com.team4.nottumblr.repository.RolesRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+
 @Service
 public class JwtService {
     
@@ -60,4 +61,26 @@ public class JwtService {
 
         return new Bloggers(userId, email, role, username, firstName, lastName);
     }
+
+    public boolean isCloseToExpiry(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration()
+                .before(new Date(System.currentTimeMillis() + 1000 * 60 * 5));
+    }
+
+
+    public boolean isValidToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration()
+                .after(new Date(System.currentTimeMillis()));
+    }
+
 }

@@ -1,7 +1,10 @@
 package com.team4.nottumblr.controller;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,13 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.team4.nottumblr.config.CookieConfig;
 import com.team4.nottumblr.dto.BloggersDTO;
 import com.team4.nottumblr.dto.JwtResponseDTO;
 import com.team4.nottumblr.dto.LoginRequestDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.service.AuthService;
+import com.team4.nottumblr.service.JwtService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -28,21 +34,27 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private CookieConfig cookieConfig;
+
+    @Autowired
+    private JwtService jwtService;
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest, HttpServletResponse response) {
-        JwtResponseDTO token = authService.authenticateBlogger(loginRequest.getUsername(), loginRequest.getPassword());
-
-        Cookie jwtCookie = new Cookie("jwt", token.getToken());
-        jwtCookie.setPath("/");
-        jwtCookie.setHttpOnly(true);
-        response.addCookie(jwtCookie);
-
-        // 4) Override or add the Set-Cookie header to include `SameSite=None`
-        // without the Secure attribute:
-        // Note: Omitting `; Secure` here for HTTP usage.
-
-        return ResponseEntity.ok().body(token);
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginRequestDTO loginRequest, HttpServletResponse response) {
+        // Authenticate the user and generate a token
+        JwtResponseDTO tokenResponse = authService.authenticateBlogger(loginRequest.getUsername(), loginRequest.getPassword());
+    
+        // Create the JWT cookie using the existing utility
+        ResponseCookie jwtCookie = cookieConfig.createJwtCookie(tokenResponse.getToken());
+    
+        // Add the cookie to the response
+        response.addHeader("Set-Cookie", jwtCookie.toString());
+    
+        // Return the token response
+        return ResponseEntity.ok(tokenResponse);
     }
+    
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
@@ -62,10 +74,43 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@CookieValue(name = "jwt", required = false) String token) {
-
-        BloggersDTO blogger = authService.getBlogger(token);
-
-        return ResponseEntity.ok().body(blogger);
+    public ResponseEntity<BloggersDTO> getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
+        String token = null;
+    
+        // Retrieve the JWT token from cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            token = Arrays.stream(cookies)
+                    .filter(c -> "jwt".equals(c.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+        }
+    
+        // If no token is present, return unauthorized
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    
+        try {
+            // Fetch the blogger as a DTO using the AuthService
+            BloggersDTO bloggerDTO = authService.getBlogger(token);
+    
+            // Refresh the token if it's close to expiry
+            if (jwtService.isCloseToExpiry(token)) {
+                Bloggers blogger = authService.getBloggerEntity(token);
+                String newToken = jwtService.generateToken(blogger);
+    
+                ResponseCookie jwtCookie = cookieConfig.createJwtCookie(newToken);
+                response.addHeader("Set-Cookie", jwtCookie.toString());
+            }
+    
+            return ResponseEntity.ok(bloggerDTO);
+    
+        } catch (IllegalArgumentException e) {
+            // Handle invalid token or blogger not found
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
+    
 }
