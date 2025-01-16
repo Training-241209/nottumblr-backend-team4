@@ -36,25 +36,29 @@ public class LikesController {
             @CookieValue(name = "jwt", required = false) String token,
             @RequestHeader(value = "Authorization", required = false) String authHeader,
             @PathVariable int postId) {
-        // Fallback to Authorization header if token is not in cookies
-        if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); // Extract token from "Bearer <token>"
-        }
 
-        // If token is still null, return unauthorized
+        token = getTokenFromCookieOrHeader(token, authHeader);
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
         }
 
-        // Proceed with creating the like
         LikesDTO likeResponse = likesService.createLikeForPost(postId, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponse);
     }
 
     // Delete like for a post
     @DeleteMapping("/{postId}/likes/{likeId}")
-    public ResponseEntity<?> deleteLikeForPost(@CookieValue(name = "jwt") String token, @PathVariable int postId,
+    public ResponseEntity<?> deleteLikeForPost(
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @PathVariable int postId,
             @PathVariable int likeId) {
+
+        token = getTokenFromCookieOrHeader(token, authHeader);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
+        }
+
         likesService.deleteLikeForPost(postId, likeId, token);
         return ResponseEntity.ok("Like deleted successfully.");
     }
@@ -67,16 +71,42 @@ public class LikesController {
 
     // Like a reblog
     @PostMapping("/reblogs/{reblogId}/likes/like")
-    public ResponseEntity<?> createLikeForReblog(@CookieValue(name = "jwt") String token, @PathVariable int reblogId) {
+    public ResponseEntity<?> createLikeForReblog(
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @PathVariable int reblogId) {
+
+        token = getTokenFromCookieOrHeader(token, authHeader);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
+        }
+
         LikesDTO likeResponse = likesService.createLikeForReblog(reblogId, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponse);
     }
 
     // Delete like for a reblog
     @DeleteMapping("/reblogs/{reblogId}/likes/{likeId}")
-    public ResponseEntity<?> deleteLikeForReblog(@CookieValue(name = "jwt") String token, @PathVariable int reblogId,
+    public ResponseEntity<?> deleteLikeForReblog(
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @PathVariable int reblogId,
             @PathVariable int likeId) {
+
+        token = getTokenFromCookieOrHeader(token, authHeader);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
+        }
+
         likesService.deleteLikeForReblog(reblogId, likeId, token);
         return ResponseEntity.ok("Like deleted successfully.");
+    }
+
+    // Utility method to retrieve the token from either the cookie or the Authorization header
+    private String getTokenFromCookieOrHeader(String token, String authHeader) {
+        if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7); // Extract token from "Bearer <token>"
+        }
+        return token;
     }
 }
