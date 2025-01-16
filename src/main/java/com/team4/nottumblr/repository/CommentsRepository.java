@@ -10,5 +10,5 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
     List<Comments> findByPost_PostId(int postId);
     List<Comments> findByReblog_ReblogId(int reblogId);
 
-    int countByPostId(int postId);
+    int countByPost_PostId(int postId);
 }

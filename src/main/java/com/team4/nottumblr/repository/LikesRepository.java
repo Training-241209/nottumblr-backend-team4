@@ -23,5 +23,5 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     boolean existsByReblog_ReblogIdAndBlogger_BloggerId(int reblogId, long bloggerId);
     List<Likes> findByReblog_ReblogId(int reblogId);
 
-    int countByPostId(int postId);
+    int countByPost_PostId(int postId);
 }

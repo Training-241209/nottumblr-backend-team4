@@ -153,8 +153,8 @@ public class PostsService {
                 tDto.setMediaType(post.getMediaType());
     
                 // 2) Count likes & comments
-                int likeCount = likesRepository.countByPostId(post.getPostId());
-                int commentCount = commentsRepository.countByPostId(post.getPostId());
+                int likeCount = likesRepository.countByPost_PostId(post.getPostId());
+                int commentCount = commentsRepository.countByPost_PostId(post.getPostId());
                 int reblogCount = 0; // or however you compute reblogs
     
                 // 3) Fill out interactions
