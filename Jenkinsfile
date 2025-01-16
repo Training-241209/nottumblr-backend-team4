@@ -4,9 +4,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'nottumblr-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
-        DB_CREDS = credentials('DB_CREDENTIALS')
-        JWT_SECRET = credentials('JWT_SECRET')
-        DB_URL = credentials('DB_URL2')
+        DB_CREDS = credentials('DB_CREDS')
+        JWT_SECRET = credentials('JWT_SECRET0')
+        DB_URL = credentials('DB_URL0')
     }
 
     stages {
@@ -40,10 +40,10 @@ pipeline {
                         docker run -d \
                         --name ${DOCKER_IMAGE} \
                         -p 8081:8080 \
-                        -e SPRING_DATASOURCE_URL=${DB_URL2} \
+                        -e SPRING_DATASOURCE_URL=${DB_URL0} \
                         -e SPRING_DATASOURCE_USERNAME=${DB_CREDS_USR} \
                         -e SPRING_DATASOURCE_PASSWORD=${DB_CREDS_PSW} \
-                        -e JWT_SECRET=${JWT_SECRET} \
+                        -e JWT_SECRET=${JWT_SECRET0} \
                         --restart unless-stopped \
                         ${DOCKER_IMAGE}:${DOCKER_TAG}
                     """
