@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.team4.nottumblr.dto.PostsDTO;
-
+import com.team4.nottumblr.dto.TrendingPostsDTO;
 import com.team4.nottumblr.model.Bloggers;
 import com.team4.nottumblr.model.Posts;
-
+import com.team4.nottumblr.repository.CommentsRepository;
+import com.team4.nottumblr.repository.LikesRepository;
 import com.team4.nottumblr.repository.PostsRepository;
 
 
@@ -22,6 +23,12 @@ public class PostsService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private LikesRepository likesRepository;
+
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     public List<PostsDTO> getPostByTag(String postTag) {
         List<Posts> posts = postsRepository.findByTags(postTag);
@@ -127,6 +134,43 @@ public class PostsService {
 
         // Delete the post
         postsRepository.deleteById(postId);
+    }
+
+    public TrendingPostsDTO getTrendingPostNoAuth() {
+        List<Posts> allPosts = postsRepository.findAll();
+
+        if (allPosts.isEmpty()) {
+            return null;
+        }
+
+        // Convert each post to a new TrendingPostsDTO
+        List<TrendingPostsDTO> trendingList = allPosts.stream()
+            .map(post -> {
+                TrendingPostsDTO tDto = new TrendingPostsDTO();
+                tDto.setPostId(post.getPostId());
+                tDto.setContent(post.getContent());
+                tDto.setUsername(post.getBlogger().getUsername());
+                
+                
+                int likeCount = likesRepository.countByPostId(post.getPostId());
+                int commentCount = commentsRepository.countByPostId(post.getPostId());
+                int reblogCount = 0; 
+
+                tDto.setLikeCount(likeCount);
+                tDto.setCommentCount(commentCount);
+                tDto.setReblogCount(reblogCount);
+                tDto.setTotalInteractions(likeCount + commentCount + reblogCount);
+                return tDto;
+            })
+            .collect(Collectors.toList());
+
+        // Sort by totalInteractions desc, pick top
+        TrendingPostsDTO top = trendingList.stream()
+            .sorted((a, b) -> b.getTotalInteractions() - a.getTotalInteractions())
+            .findFirst()
+            .orElse(null);
+
+        return top;
     }
 
 }

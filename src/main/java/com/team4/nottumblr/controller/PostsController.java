@@ -1,6 +1,7 @@
 package com.team4.nottumblr.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.team4.nottumblr.dto.PostsDTO;
+import com.team4.nottumblr.dto.TrendingPostsDTO;
 import com.team4.nottumblr.service.PostsService;
 
 import jakarta.servlet.http.HttpServlet;
@@ -40,9 +42,8 @@ public class PostsController {
 
     @GetMapping("/my-posts")
     public ResponseEntity<?> getMyPosts(
-        @CookieValue(name = "jwt", required = false) String token,
-        @RequestHeader(value = "Authorization", required = false) String authHeader, HttpServletResponse response
-    ) {
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader, HttpServletResponse response) {
         // Fallback to Authorization header if token is not in cookies
         if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7); // Extract token from "Bearer <token>"
@@ -66,50 +67,48 @@ public class PostsController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createPost(
-        @CookieValue(name = "jwt", required = false) String token,
-        @RequestHeader(value = "Authorization", required = false) String authHeader,
-        @RequestBody PostsDTO post
-    ) {
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody PostsDTO post) {
         // Retrieve token from header if not present in cookies
         if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
-    
+
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Token missing");
         }
-    
+
         try {
             PostsDTO createdPost = postsService.createPost(post, token);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating post: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating post: " + e.getMessage());
         }
     }
-    
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(
-        @CookieValue(name = "jwt", required = false) String token,
-        @RequestHeader(value = "Authorization", required = false) String authHeader,
-        @PathVariable int postId
-    ) {
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @PathVariable int postId) {
         if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
-    
+
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Token missing");
         }
-    
+
         try {
             postsService.deletePost(postId, token);
             return ResponseEntity.ok().body("Post deleted");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting post: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting post: " + e.getMessage());
         }
     }
-    
 
     @GetMapping("/user/{bloggerId}")
     public ResponseEntity<?> getPostsByBlogger(@PathVariable Long bloggerId) {
@@ -119,24 +118,37 @@ public class PostsController {
 
     @GetMapping("/tags/{tag}")
     public ResponseEntity<?> getTags(
-        @CookieValue(name = "jwt", required = false) String token,
-        @RequestHeader(value = "Authorization", required = false) String authHeader
-    ) {
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
         if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
-    
+
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Token missing");
         }
-    
+
         try {
             List<PostsDTO> tag = postsService.getPostByTag(token);
             return ResponseEntity.ok(tag);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching tags: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching tags: " + e.getMessage());
         }
     }
-    
-}
 
+    @GetMapping("/trending")
+    public ResponseEntity<?> getTrendingPostNoAuth() {
+        try {
+            TrendingPostsDTO trending = postsService.getTrendingPostNoAuth();
+            if (trending == null) {
+                return ResponseEntity.ok("No posts found or no interactions yet.");
+            }
+            return ResponseEntity.ok(trending);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching trending post: " + e.getMessage());
+        }
+    }
+
+}
