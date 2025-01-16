@@ -13,7 +13,7 @@ public class CookieConfig {
                 .httpOnly(true)
                 .secure(false)
                 .maxAge(Duration.ofMinutes(15))
-                .sameSite("Lax")
+                .sameSite("None")
                 .domain("18.220.70.231")
                 .path("/")
                 .build();
