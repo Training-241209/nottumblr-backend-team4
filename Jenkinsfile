@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'nottumblr-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
         DB_CREDS = credentials('DB_CREDS')
-        JWT_SECRET = credentials('JWT_SECRET0')
+        JWT_SECRET = credentials('JWT_SECRET')
         DB_URL0 = credentials('DB_URL0')
     }
 
@@ -15,7 +15,7 @@ pipeline {
                 echo "DB_URL: ${env.DB_URL0}"
                 echo "DB_CREDS_USR: ${env.DB_CREDS_USR}"
                 echo "DB_CREDS_PSW: ${env.DB_CREDS_PSW}"
-                echo "JWT_SECRET: ${env.JWT_SECRET0}"
+                echo "JWT_SECRET: ${env.JWT_SECRET}"
             }
         }
 
@@ -52,7 +52,7 @@ pipeline {
                         -e SPRING_DATASOURCE_URL=${DB_URL0} \
                         -e SPRING_DATASOURCE_USERNAME=${DB_CREDS_USR} \
                         -e SPRING_DATASOURCE_PASSWORD=${DB_CREDS_PSW} \
-                        -e JWT_SECRET=${JWT_SECRET0} \
+                        -e JWT_SECRET=${JWT_SECRET} \
                         --restart unless-stopped \
                         ${DOCKER_IMAGE}:${DOCKER_TAG}
                     """
