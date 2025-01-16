@@ -39,13 +39,7 @@ public class AuthController {
 
         // 4) Override or add the Set-Cookie header to include `SameSite=None`
         // without the Secure attribute:
-        response.setHeader("Set-Cookie",
-                "jwt=" + token +
-                        "; Path=/" +
-                        "; HttpOnly" +
-                        "; SameSite=None"
         // Note: Omitting `; Secure` here for HTTP usage.
-        );
 
         return ResponseEntity.ok().body(token);
     }
