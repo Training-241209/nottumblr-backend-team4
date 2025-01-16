@@ -5,12 +5,16 @@ public class TrendingPostsDTO {
     private String content;
     private String username;
 
+    private String profilePictureUrl;
+    private String mediaUrl;
+    private String mediaType;
+
     private int likeCount;
     private int commentCount;
     private int reblogCount;
     private int totalInteractions;
 
-    public TrendingPostsDTO(int postId, String content, String username, int likeCount, int commentCount, int reblogCount, int totalInteractions) {
+    public TrendingPostsDTO(int postId, String content, String username, int likeCount, int commentCount, int reblogCount, int totalInteractions, String profilePictureUrl, String mediaUrl, String mediaType) {
         this.postId = postId;
         this.content = content;
         this.username = username;
@@ -18,12 +22,39 @@ public class TrendingPostsDTO {
         this.commentCount = commentCount;
         this.reblogCount = reblogCount;
         this.totalInteractions = totalInteractions;
+        this.profilePictureUrl = profilePictureUrl;
+        this.mediaUrl = mediaUrl;
+        this.mediaType = mediaType;
     }
 
     // Getters and Setters
     
     public TrendingPostsDTO() {
         
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+    
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+    
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+    
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public int getPostId() {

@@ -138,39 +138,40 @@ public class PostsService {
 
     public TrendingPostsDTO getTrendingPostNoAuth() {
         List<Posts> allPosts = postsRepository.findAll();
-
-        if (allPosts.isEmpty()) {
-            return null;
-        }
-
-        // Convert each post to a new TrendingPostsDTO
+        if (allPosts.isEmpty()) return null;
+    
+        // Convert to a list of TrendingPostsDTO, adding interactions + media info
         List<TrendingPostsDTO> trendingList = allPosts.stream()
             .map(post -> {
                 TrendingPostsDTO tDto = new TrendingPostsDTO();
                 tDto.setPostId(post.getPostId());
-                tDto.setContent(post.getContent());
                 tDto.setUsername(post.getBlogger().getUsername());
-                
-                
+                tDto.setContent(post.getContent());
+    
+                tDto.setProfilePictureUrl(post.getBlogger().getProfilePictureUrl());
+                tDto.setMediaUrl(post.getMediaUrl());
+                tDto.setMediaType(post.getMediaType());
+    
+                // 2) Count likes & comments
                 int likeCount = likesRepository.countByPostId(post.getPostId());
                 int commentCount = commentsRepository.countByPostId(post.getPostId());
-                int reblogCount = 0; 
-
+                int reblogCount = 0; // or however you compute reblogs
+    
+                // 3) Fill out interactions
                 tDto.setLikeCount(likeCount);
                 tDto.setCommentCount(commentCount);
                 tDto.setReblogCount(reblogCount);
                 tDto.setTotalInteractions(likeCount + commentCount + reblogCount);
+    
                 return tDto;
             })
             .collect(Collectors.toList());
-
-        // Sort by totalInteractions desc, pick top
-        TrendingPostsDTO top = trendingList.stream()
+    
+        // Sort descending by totalInteractions
+        return trendingList.stream()
             .sorted((a, b) -> b.getTotalInteractions() - a.getTotalInteractions())
             .findFirst()
             .orElse(null);
-
-        return top;
     }
 
 }
