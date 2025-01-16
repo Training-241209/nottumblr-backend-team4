@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,14 +32,29 @@ public class LikesController {
 
     // Like a post
     @PostMapping("/{postId}/likes/like")
-    public ResponseEntity<?> createLikeForPost(@CookieValue(name = "jwt") String token, @PathVariable int postId) {
+    public ResponseEntity<?> createLikeForPost(
+            @CookieValue(name = "jwt", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @PathVariable int postId) {
+        // Fallback to Authorization header if token is not in cookies
+        if (token == null && authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7); // Extract token from "Bearer <token>"
+        }
+
+        // If token is still null, return unauthorized
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid JWT token");
+        }
+
+        // Proceed with creating the like
         LikesDTO likeResponse = likesService.createLikeForPost(postId, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponse);
     }
 
     // Delete like for a post
     @DeleteMapping("/{postId}/likes/{likeId}")
-    public ResponseEntity<?> deleteLikeForPost(@CookieValue(name = "jwt") String token, @PathVariable int postId, @PathVariable int likeId) {
+    public ResponseEntity<?> deleteLikeForPost(@CookieValue(name = "jwt") String token, @PathVariable int postId,
+            @PathVariable int likeId) {
         likesService.deleteLikeForPost(postId, likeId, token);
         return ResponseEntity.ok("Like deleted successfully.");
     }
@@ -58,7 +74,8 @@ public class LikesController {
 
     // Delete like for a reblog
     @DeleteMapping("/reblogs/{reblogId}/likes/{likeId}")
-    public ResponseEntity<?> deleteLikeForReblog(@CookieValue(name = "jwt") String token, @PathVariable int reblogId, @PathVariable int likeId) {
+    public ResponseEntity<?> deleteLikeForReblog(@CookieValue(name = "jwt") String token, @PathVariable int reblogId,
+            @PathVariable int likeId) {
         likesService.deleteLikeForReblog(reblogId, likeId, token);
         return ResponseEntity.ok("Like deleted successfully.");
     }
