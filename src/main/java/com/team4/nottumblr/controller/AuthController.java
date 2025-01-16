@@ -24,20 +24,30 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthController {
-    
+
     @Autowired
     private AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest, HttpServletResponse response) {
         JwtResponseDTO token = authService.authenticateBlogger(loginRequest.getUsername(), loginRequest.getPassword());
-        
+
         Cookie jwtCookie = new Cookie("jwt", token.getToken());
         jwtCookie.setPath("/");
         jwtCookie.setHttpOnly(true);
         response.addCookie(jwtCookie);
 
-        return ResponseEntity.ok().body(token); 
+        // 4) Override or add the Set-Cookie header to include `SameSite=None`
+        // without the Secure attribute:
+        response.setHeader("Set-Cookie",
+                "jwt=" + token +
+                        "; Path=/" +
+                        "; HttpOnly" +
+                        "; SameSite=None"
+        // Note: Omitting `; Secure` here for HTTP usage.
+        );
+
+        return ResponseEntity.ok().body(token);
     }
 
     @PostMapping("/logout")
@@ -48,7 +58,7 @@ public class AuthController {
         jwtCookie.setHttpOnly(true);
         response.addCookie(jwtCookie);
 
-        return ResponseEntity.ok().body("Logged out successfully."); 
+        return ResponseEntity.ok().body("Logged out successfully.");
     }
 
     @PostMapping("/register")
@@ -58,7 +68,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-        public ResponseEntity<?> getCurrentUser(@CookieValue(name = "jwt", required = false) String token) {
+    public ResponseEntity<?> getCurrentUser(@CookieValue(name = "jwt", required = false) String token) {
 
         BloggersDTO blogger = authService.getBlogger(token);
 
