@@ -6,6 +6,7 @@ pipeline {
         DOCKER_TAG = "${BUILD_NUMBER}"
         DB_CREDS = credentials('DB_CREDS')
         JWT_SECRET = credentials('JWT_SECRET0')
+        echo "DB_URL0: ${env.DB_URL0}"
         DB_URL = credentials('DB_URL0')
     }
 
