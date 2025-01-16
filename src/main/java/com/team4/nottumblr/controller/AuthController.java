@@ -77,25 +77,35 @@ public class AuthController {
     public ResponseEntity<BloggersDTO> getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
         String token = null;
     
-        // Retrieve the JWT token from cookies
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            token = Arrays.stream(cookies)
-                    .filter(c -> "jwt".equals(c.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
+        // Retrieve the JWT token from the Authorization header
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7); // Extract the token after "Bearer "
+        }
+    
+        // If no token is found in the Authorization header, check cookies
+        if (token == null || token.isEmpty()) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                token = Arrays.stream(cookies)
+                        .filter(c -> "jwt".equals(c.getName()))
+                        .map(Cookie::getValue)
+                        .findFirst()
+                        .orElse(null);
+            }
         }
     
         // Log the retrieved token
         System.out.println("JWT token received: " + token);
     
+        // If no token is present, return unauthorized
         if (token == null || token.isEmpty()) {
-            System.out.println("No JWT token found in cookies");
+            System.out.println("No JWT token found in cookies or Authorization header");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     
         try {
+            // Decode and validate the token to get the user information
             BloggersDTO bloggerDTO = authService.getBlogger(token);
     
             // Refresh the token if it's close to expiry
@@ -115,6 +125,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+    
     
     
     
