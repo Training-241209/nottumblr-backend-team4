@@ -12,7 +12,7 @@ public class CookieConfig {
         return ResponseCookie.from("jwt", token)
                 .httpOnly(true)
                 .maxAge(Duration.ofMinutes(15))
-                .sameSite("None")
+                .sameSite("Lax")
                 .domain("18.220.70.231")
                 .path("/")
                 .build();
