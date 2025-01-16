@@ -11,9 +11,9 @@ public class CookieConfig {
     public ResponseCookie createJwtCookie(String token) {
         return ResponseCookie.from("jwt", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .maxAge(Duration.ofMinutes(15))
-                .sameSite("None")
+                .sameSite("Lax")
                 .domain("18.220.70.231")
                 .path("/")
                 .build();
