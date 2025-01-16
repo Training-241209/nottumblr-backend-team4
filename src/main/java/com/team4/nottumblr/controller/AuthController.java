@@ -87,30 +87,35 @@ public class AuthController {
                     .orElse(null);
         }
     
-        // If no token is present, return unauthorized
+        // Log the retrieved token
+        System.out.println("JWT token received: " + token);
+    
         if (token == null || token.isEmpty()) {
+            System.out.println("No JWT token found in cookies");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     
         try {
-            // Fetch the blogger as a DTO using the AuthService
             BloggersDTO bloggerDTO = authService.getBlogger(token);
     
             // Refresh the token if it's close to expiry
             if (jwtService.isCloseToExpiry(token)) {
+                System.out.println("Token is close to expiry, refreshing...");
                 Bloggers blogger = authService.getBloggerEntity(token);
                 String newToken = jwtService.generateToken(blogger);
     
                 ResponseCookie jwtCookie = cookieConfig.createJwtCookie(newToken);
                 response.addHeader("Set-Cookie", jwtCookie.toString());
+                System.out.println("New JWT token issued and cookie set.");
             }
     
             return ResponseEntity.ok(bloggerDTO);
-    
         } catch (IllegalArgumentException e) {
-            // Handle invalid token or blogger not found
+            System.out.println("Error validating token: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+    
+    
     
 }
