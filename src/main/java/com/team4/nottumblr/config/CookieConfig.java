@@ -14,7 +14,7 @@ public class CookieConfig {
                 .secure(true)
                 .maxAge(Duration.ofMinutes(15))
                 .sameSite("None")
-                .domain("localhost")
+                .domain("18.220.70.231")
                 .path("/")
                 .build();
     }
