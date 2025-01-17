@@ -25,7 +25,7 @@ import com.team4.nottumblr.service.BloggersService;
 
 @RestController
 @RequestMapping("/bloggers")
-@CrossOrigin(origins = "http://18.220.70.231:8082", allowCredentials = "true")
+@CrossOrigin(origins = "http://3.15.203.66:81", allowCredentials = "true")
 public class BloggersController {
 
     @Autowired
