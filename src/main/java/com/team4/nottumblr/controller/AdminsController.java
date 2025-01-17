@@ -19,7 +19,7 @@ import com.team4.nottumblr.service.AdminsService;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "http://18.222.20.24/", allowCredentials = "true")
 public class AdminsController {
 
     @Autowired
